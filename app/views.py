@@ -6,6 +6,8 @@ from app.models.User import User
 from app.models.Product import Product
 from app.models.Cart import Cart
 from app.models.Order import Order
+from app.models.Holland import Holland
+from app.models.SqlExecuter import SqlExecuter
 from app.admin.models import *
 from app.admin.views import *
 from utils import pageHelper
@@ -26,107 +28,33 @@ def unauthorized_handler():
 # def main():
 #     return redirect(url_for('showBooksDefault'))
 
-@flask_login.login_required
 @app.route("/",methods=['GET'])
+@flask_login.login_required
 def main():
     if(flask_login.current_user.is_authenticated):
         user = flask_login.current_user
         return jsonify({"user":format("{} {}".format(user.first_name,user.last_name))})
     return redirect(url_for('loginUser'))
+
+
+@app.route("/whatthefuck",methods=["GET"])
+def what():
+    data = SqlExecuter.getAllRowsPacked("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='dating';")
+    return jsonify({'data':data})
     
 
+@app.route("/holland",methods=['GET'])
+def hollandStartPage():
+    return render_template("holland.html",user = flask_login.current_user)
 
-@app.route('/search')
-def searchAdvanced():
-    availableTags = Product.getAvailableTags()
-    return render_template('advanced-search.html',user=flask_login.current_user,tags = availableTags['data'])
 
-@app.route('/checkout',methods=['GET'])
-@flask_login.login_required
-def checkout():
-        cart = Cart.getCartOfUser(flask_login.current_user.userID) #TODO: CHECK STATUS
-        if(cart['status'] == 0):
-            return render_template('checkout.html',
-            user = flask_login.current_user,
-            productsInCart=cart['data'])
-        elif(cart['status'] == 2):
-            return render_template('checkout.htlm',
-            user = flask_login.current_user,
-            error = cart['message']
-            )
-        
-
-@app.route('/order/<int:orderID>/cancel')
-@flask_login.login_required
-def cancelOrder(orderID):
-    cancelOrder = Order.cancelOrder(flask_login.current_user.userID,orderID)
-    if(cancelOrder['status'] == 0):
-        return redirect(url_for('showDetailsOfOrder',orderID = orderID))
-    elif(cancelOrder['status'] == 3 or cancelOrder['status'] == 40):
-        return redirect(url_for('main'))
-
-@app.route('/order/<int:orderID>')
-@flask_login.login_required
-def showDetailsOfOrder(orderID):
-    orderDetails = Order.getDetailsOfOrder(flask_login.current_user.userID,orderID)
-    if(orderDetails['status'] == 0):
-        return render_template('order-page.html',
-        orderInfo = orderDetails['info'],
-        user = flask_login.current_user,
-        data = orderDetails['data'],
-        address = orderDetails['address'])
-    elif(orderDetails['status'] == 3 or orderDetails['status'] == 40):
-        return redirect(url_for('main'))
+@app.route("/holland/<int:number>")
+def hollandQuiz(number):
+    result = Holland.getWords(number)
+    if(result['status'] == 0):
+        return render_template("quiz.html",data=result['data'])
     else:
-        return render_template('order-page.html',
-        user = flask_login.current_user,
-        error = orderDetails['message'],
-        orderDetails = orderDetails)
-
-@app.route('/user/orders',methods=['GET'])
-@flask_login.login_required
-def showOrders():
-    orders = Order.getOrdersOfUser(flask_login.current_user.userID)
-    if(orders['status'] == 0):
-        return render_template('orders-page.html',ordersList = orders['data'],user = flask_login.current_user)
-    else:
-        return render_template('orders-page.html',error = orders['message'],user = flask_login.current_user)
-
-@app.route('/order/new',methods=['GET','POST'])
-@flask_login.login_required
-def newOrder():
-        if(request.method == 'POST'):
-            district = request.form.get('district')
-            street = request.form.get('street')
-            flat = request.form.get('flat',type=str,default = '')
-            floor = request.form.get('floor',type=str,default = '')
-            porch = request.form.get('porch',type=str,default = '')
-            house = request.form.get('house')
-            email = request.form.get('email',type=str,default='')
-            description = request.form.get('desc',type=str,default='')
-            phone = request.form.get('phone',type=str,default='')
-            newOrder = Order.addNewOrder(flask_login.current_user.userID,district,
-            flat,house,floor,street,porch,email=email,desc=description,phone=phone)
-            if(newOrder['status'] == 0):
-                return render_template('order.html',user = flask_login.current_user,data = newOrder['data']['data'])
-            else:
-                return render_template('order.html',user = flask_login.current_user,error = newOrder['message'])
-        else:
-            return redirect(url_for('main'))
-
-@app.route('/cart',methods=['GET'])
-@flask_login.login_required
-def cart():
-        cart = Cart.getCartOfUser(flask_login.current_user.userID) #TODO: CHECK STATUS
-        if(cart['status'] == 0):
-            print('len ' + str(len(cart['data'])))
-            return render_template('shoping-cart.html',
-            user = flask_login.current_user,
-            productsInCart = cart['data'])
-        else:
-            return render_template('shoping-cart.html',
-            user = flask_login.current_user,
-            error = cart['message'])
+        return redirect(url_for('main'))
 
 
 @app.route("/login",methods = ['GET','POST'])
@@ -140,7 +68,7 @@ def loginUser():
         
         if(userID != -1):# Если пользователь найден
             flask_login.login_user(load_user(userID),remember=True)#Логиним пользователя в системе
-            return redirect(url_for('main'))# Перекидываем на страницу книг
+            return redirect(url_for('hollandStartPage'))# Перекидываем на страницу книг
         else:
             return render_template('login.html',error = "Not found")#Выводим страницу логина с ошибкой
     else:
@@ -180,84 +108,6 @@ def userInfo():
 def logoutUser():
     flask_login.logout_user()
     return redirect(url_for('main'))
-
-@app.route('/books',methods = ['GET'])
-def showBooksDefault():
-    return showBooks(1)
-
-@app.route('/books/<int:page>',methods=["GET"])
-def showBooks(page):
-    if(page < 1):
-        return render_template('books.html',error = 'Incorrect page',user = flask_login.current_user)
-    OFFSET = 8
-    userQuerySearch = request.args.get('q',default=None,type=str)
-    tagsFilter = request.args.getlist('tags')
-    tagsFilterStr = None
-    if(userQuerySearch is not None):
-        userQuerySearch = Security.escape_sql(userQuerySearch)
-        result = Product.getAllProfuctsFilteredByQuery(userQuerySearch,page,OFFSET)
-        countOfRows = Product.getQuantityOfRowsInTable(
-            'select count(*) as "count" from Товар where title like "%{0}% " \
-            or author like "%{0}%" order by rate;'.format(userQuerySearch))['count']
-    elif(tagsFilter):
-        countOfRows = Product.getQuantityOfRowsInTable(sqlQueryHelper.buildSqlQueryByTags('select count(*) as "count" from Товар',tagsFilter))['count']
-        result = Product.getAllProductsFilteredByTags(tagsFilter,page,OFFSET)
-        tagsFilterStr = tagsHelper.makeArrayOfTagsToStr(tagsFilter)
-        tagsFilterStr = Security.escape_sql(tagsFilterStr)
-    else:
-        countOfRows = Product.getQuantityOfRowsInTable('select count(*) as "count" from Товар;')['count']
-        result = Product.getAllProfuctsFilteredById(page,OFFSET)
-    if(result['status'] == 0):
-        countOfPages = countOfRows // OFFSET
-        if(countOfRows % OFFSET > 0):
-            countOfPages += 1
-        countOfPagesRange = pageHelper.getRangeOfPages(countOfPages,page)
-        return render_template(
-            'books.html', #TODO : IF STATUS
-            products = result['data'],
-            countOfPagesRange = countOfPagesRange,
-            user = flask_login.current_user,
-            q = userQuerySearch,
-            currentPage=page,
-            tagsAlreadySearched = tagsFilterStr)
-    elif(result['status'] == 2):
-        return render_template('books.html',
-        error = 'Not found',
-        user = flask_login.current_user,
-        q = userQuerySearch,
-        tagsAlreadySearched = tagsFilterStr)
-    elif(result['status'] == 1):
-        return render_template('books.html',
-        error = 'SQL runtime error',
-        user = flask_login.current_user)
-    return render_template('books.html',error='ERROR',user = flask_login.current_user)
-
-
-@app.route('/books/details/<int:productID>')
-def showDetailsOfBook(productID):
-    details = Product.getDetailsOfProduct(productID)
-    if(details['status'] == 0):
-        details['data'][0]['rate']= Product.getRateOfProduct(productID)
-        if(flask_login.current_user.is_authenticated):
-            return render_template('shop-details.html',
-            user = flask_login.current_user,
-            details = details['data'][0],
-            userMark = flask_login.current_user.getUserMarkTo(productID),
-            quantityInCart = Cart.getQuantityOfProductInCart(flask_login.current_user.userID,productID))
-        else:
-            return render_template('shop-details.html',
-            user = flask_login.current_user,
-            details = details['data'][0])
-    elif(details['status'] == 2):
-        return render_template('shop-details.html',
-        user = flask_login.current_user,error = details['message'])
-    elif(details['status'] == 1): #TODO: ERROR
-        return render_template('shop-details.html',
-        user = flask_login.current_user,error = details['message'])
-    else:
-        return redirect(url_for('showBooks',page=1))
-
-
 
 @app.errorhandler(404)
 def page_not_found(e):

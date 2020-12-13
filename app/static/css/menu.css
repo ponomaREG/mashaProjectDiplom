@@ -1,0 +1,95 @@
+
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Times New Roman', serif;
+}
+
+a {
+    text-decoration: none;
+    color: #EEEEEE;
+}
+
+a:hover {
+    text-decoration: underline;
+
+}
+
+a:visited {
+    color: #4694AE;
+}
+
+body > header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center; 
+    margin: 0;
+    left: 0;
+    background-color: #494949;
+}
+
+.mihail {
+    font-family: 'Times New Roman',serif;
+    font-style: oblique;
+    font-size: 30px;
+    padding: 0 10px;
+}
+
+.mihail a {
+    color: #EEEEEE;
+}
+
+.mihail a:hover {
+    text-decoration: none;
+}
+
+nav {
+    padding: 0;
+    margin: 0;
+}
+
+nav ul{
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+nav li {
+    display: flex;
+    align-items: center;
+}
+
+nav li a
+{
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+    padding: 0 10px;
+    min-height: 12vh;
+    font-weight: bold;
+    color: #EEEEEE;
+}
+
+nav li a:hover
+{
+    text-decoration: none;
+    background: #736381;
+    box-shadow: inset 0px -0.1px 1px 0px rgba(0,0,0,0.75);
+    cursor: pointer;
+}
+a {
+    text-decoration: none;
+    color: #EEEEEE;
+}
+
+a:hover {
+    text-decoration: underline;
+
+}

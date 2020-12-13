@@ -1,0 +1,197 @@
+
+  @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+  html,body{
+    margin:0;
+    padding: 0;
+
+  }
+
+
+  .bg{
+
+  background: #9370DB; /* fallback for old browsers */
+
+  background: linear-gradient(to left, #9370DB, #FF4500);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+
+  }
+
+  @import "https://fonts.googleapis.com/css?family=Russo+One";
+  h2.funny-title{border-top:5px solid #E0DBDE;border-bottom:5px solid #E0DBDE;font-size:70px;text-align:center;margin-top:40px;margin-bottom:5px;text-transform:uppercase;font-family:'Russo One',sans-serif;font-weight:900;letter-spacing:8px}
+  @-webkit-keyframes move-background {
+  0%{background-position:-300px 0}
+  100%{background-position:300px -300px}
+  }
+  @-moz-keyframes move-background {
+  0%{background-position:-300px 0}
+  100%{background-position:300px -300px}
+  }
+  @keyframes move-background {
+  0%{background-position:-300px 0}
+  100%{background-position:300px -300px}
+  }
+  .section-title{-webkit-animation-play-state:running;-moz-animation-play-state:running;animation-play-state:running;color:transparent;background:url(https://obninsksite.ru/assets/theme/images/blog/square.svg) no-repeat #ECE7EA;background-size:cover;-webkit-text-fill-color:transparent;-moz-text-fill-color:transparent;-webkit-background-clip:text;-moz-background-clip:text;background-clip:text;-webkit-animation:move-background 20s infinite linear alternate;-moz-animation:move-background 20s infinite linear alternate;animation:move-background 20s infinite linear alternate}
+
+  .center{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position:relative;
+    width:70%;
+  }
+
+  .center-text{
+    color: #ffffff; 
+    font-size:100%;
+    text-align:justify;
+    position: relative;
+    font-family: "Roboto", sans-serif;
+    top:-40px;
+  }
+
+  .center-header{
+    position: relative;
+    top: -40px;
+  }
+
+  .center-button{
+    display: flex;
+    justify-content: center;
+  }
+
+  .center-button button{
+    font-family: "Roboto", sans-serif;
+
+    text-transform: uppercase;
+
+    outline: 0;
+
+    background: #9370DB;
+
+    width: 40%;
+
+
+    border-radius: 5px;
+    border: #9370DB;
+
+    padding: 20px;
+
+    color: #FFFFFF;
+
+
+    font-size: 20px;
+
+    -webkit-transition: all 0.3 ease;
+
+    transition: all 0.3 ease;
+
+    cursor: pointer;
+     box-shadow:  0px 0.9px 0px 0px rgba(0,0,0,0.75);
+    margin-bottom: 30px;
+  }
+
+  .center-button button:hover,.form button:active,.form button:focus {
+
+    background: #483D8B;
+
+}
+
+/*тут будет менюшка*/
+
+a {
+    text-decoration: none;
+    color: #EEEEEE;
+}
+
+a:hover {
+    text-decoration: underline;
+
+}
+
+a:visited {
+    color: #4694AE;
+}
+
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center; 
+    margin: 0;
+    left: 0;
+    background: linear-gradient(to left, #9370DB, #FF4500);
+    width: 100vw;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+
+}
+
+.mihail {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bolder;
+    font-size: 25px;
+    padding: 0 10px;
+}
+
+.mihail a {
+    color: #fff;
+}
+
+.mihail a:hover {
+    text-decoration: none;
+}
+
+nav {
+    padding: 0;
+    margin: 0;
+}
+
+nav ul{
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+nav li {
+    display: flex;
+    align-items: center;
+}
+
+nav li a
+{
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+    padding: 0 10px;
+    min-height: 8vh;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+}
+
+nav li a:hover
+{
+    text-decoration: none;
+    background: #FF4500;
+    box-shadow: 0px -0.1px 1px 0px rgba(0,0,0,0.75);
+    cursor: pointer;
+}
+a {
+    text-decoration: none;
+    color: #EEEEEE;
+}
+
+a:hover {
+    text-decoration: underline;
+
+}
+
+/*менюшка закончиласб*/
