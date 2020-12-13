@@ -4,7 +4,7 @@
 
 <head>
 
-<title>Войти</title>
+<title>Регистрация модератора</title>
 
 </head>
 
@@ -29,14 +29,13 @@ position: relative;
 z-index: 1;
 
 background: #FFFFFF;
-
 border-radius: 4px;
 
 max-width: 360px;
 
 margin: 0 auto 100px;
 
-padding: 35px;
+padding: 45px;
 
 text-align: center;
 
@@ -44,7 +43,25 @@ box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 
 }
 
-.form input {/*ввод данных*/
+.form .back {
+
+color: #b3b3b3;
+
+font-size: 13px;
+
+text-align: start;
+
+}
+
+.form .back a {
+
+color: #9370DB;
+
+text-decoration: none;
+
+}
+
+.form input {
 
 font-family: "Roboto", sans-serif;
 
@@ -53,8 +70,6 @@ outline: 0;
 background: #f2f2f2;
 
 width: 100%;
-
-border-radius: 3px;
 
 border: 0;
 
@@ -68,7 +83,7 @@ font-size: 14px;
 
 }
 
-.form button { /*войти*/
+.form button {
 
 font-family: "Roboto", sans-serif;
 
@@ -80,8 +95,7 @@ background: #9370DB;
 
 width: 100%;
 
-border-radius: 3px;
-border: #9370DB;
+border: 0;
 
 padding: 15px;
 
@@ -94,6 +108,7 @@ font-size: 14px;
 transition: all 0.3 ease;
 
 cursor: pointer;
+border-radius: 4px;
 
 }
 
@@ -113,21 +128,17 @@ font-size: 12px;
 
 }
 
-.form .back {
-
-color: #9370DB;
-
-font-size: 13px;
-
-text-align: start;
-
-}
-
-.form .back a { /*на главную*/
+.form .message a {
 
 color: #9370DB;
 
 text-decoration: none;
+
+}
+
+.form .register-form {
+
+display: block;
 
 }
 
@@ -138,14 +149,6 @@ margin: 1px 0 3px;
 color: #EF3B3A;
 
 font-size: 15px;
-
-}
-
-.form .message a {/*создать аккаунт*/
-
-color: #9370DB;
-
-text-decoration: none;
 
 }
 
@@ -234,22 +237,35 @@ font-family: "Roboto", sans-serif;
 
 <div class="form">
 
-<p class="back"><a href="holland.html">&larr;На главную</a></p>
+<p class="back"><a href="{{ url_for('showBooks',page=1) }}">&larr;На главную</a></p>
 
-<form action="{{ url_for('loginUser')}}" class="login-form" method="POST">
+<form action="{{ url_for('registrationUser') }}" class="register-form" method="POST">
 
-<input type="text" placeholder="Phone" name="phone"/>
+<input type="text" placeholder="Имя" name="firstName" required/>
 
-<input type="password" placeholder="Пароль" name="password"/>
+<input type="text" placeholder="Фамилия" name="lastName" required/>
 
-<button type="submit">Войти</button>
+<input type="text" placeholder="Отчество" name="patrony" required/>
 
-{% if error %}
-    <p>{{error}}</p>
+<input type="text" placeholder="Телефон" name="tel" required/>
 
-{% endif %}
+<input type="text" placeholder="Email" name="mail" required/>
 
-<p class="message"><a href="{{url_for('registrationUser')}}">Создать аккаунт</a></p>
+<input type="text" placeholder="Паспортные данные" name="passport" required/>
+
+
+<input type="password" placeholder="Пароль" name="pswd" required/>
+
+<input type="password" placeholder="Повторите пароль" name="pswd2" required/>
+
+
+
+Дата рождения:<input type="date" name="birthDate"/>
+
+
+<button type="submit">Создать</button>
+
+<p class="message">Уже зарегистрированы? <a href="{{ url_for('loginUser') }}">Войти</a></p>
 
 </form>
 

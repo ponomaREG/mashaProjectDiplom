@@ -22,9 +22,19 @@ def unauthorized_handler():
     return redirect(url_for('loginUser'))
     
     
+# @app.route("/",methods=['GET'])
+# def main():
+#     return redirect(url_for('showBooksDefault'))
+
+@flask_login.login_required
 @app.route("/",methods=['GET'])
 def main():
-    return redirect(url_for('showBooksDefault'))
+    if(flask_login.current_user.is_authenticated):
+        user = flask_login.current_user
+        return jsonify({"user":format("{} {}".format(user.first_name,user.last_name))})
+    return redirect(url_for('loginUser'))
+    
+
 
 @app.route('/search')
 def searchAdvanced():
@@ -122,14 +132,15 @@ def cart():
 @app.route("/login",methods = ['GET','POST'])
 def loginUser():
     if(flask_login.current_user.is_authenticated): #Проверяем вошел ли уже пользователь
-        return redirect(url_for('userInfo')) #Перекидываем на страницу профиля
+        return redirect(url_for('main')) #Перекидываем на страницу профиля
     if(request.method == 'POST'): # Если метод обращения к url POST
-        email = Security.escape_sql(request.form.get('email',type=str)) # Получаем введенный email 
+        phone = Security.escape_sql(request.form.get('phone',type=str)) # Получаем введенный email 
         password = Security.escape_sql(request.form.get('password',type=str)) # Получаем введенный пароль
-        userID = User.validateUserAndReturnUserID(email,password) #Получаем ID пользователя по введенному email и паролю
+        userID = User.validateUserAndReturnUserID(phone,password) #Получаем ID пользователя по введенному email и паролю
+        
         if(userID != -1):# Если пользователь найден
             flask_login.login_user(load_user(userID),remember=True)#Логиним пользователя в системе
-            return redirect(url_for('showBooks',page=1))# Перекидываем на страницу книг
+            return redirect(url_for('main'))# Перекидываем на страницу книг
         else:
             return render_template('login.html',error = "Not found")#Выводим страницу логина с ошибкой
     else:
@@ -138,9 +149,9 @@ def loginUser():
 @app.route('/registration',methods=['GET','POST'])
 def registrationUser():
     if(flask_login.current_user.is_authenticated):
-        return redirect(url_for('userInfo'))
+        return redirect(url_for('main'))
     if(request.method == 'POST'):
-        email = Security.escape_sql(request.form.get('email',type=str)) # Получаем введенный email пользователя
+        phone = Security.escape_sql(request.form.get('phone',type=str)) # Получаем введенный email пользователя
         pswd = Security.escape_sql(request.form.get('pswd',type=str)) # Получаем введенный пароль пользователя
         pswd2 = Security.escape_sql(request.form.get('pswd2',type=str)) # Получаем введенный 2 пароль пользователя
         first_name = Security.escape_sql(request.form.get('firstName',type=str)) # Получаем введенныое имя пользователя
@@ -148,7 +159,7 @@ def registrationUser():
         birthdate = Security.escape_sql(request.form.get('birthDate'))# Получаем введенную дата рождения пользователя
         if(pswd != pswd2):
             return render_template('registration.html',error = 'Password mismatch') # Возвращаем html с ошибкой
-        resultRegisterOperation = User.registerUser(email,pswd,last_name,first_name,birthdate) # Создаем пользователя
+        resultRegisterOperation = User.registerUser(phone,pswd,last_name,first_name,birthdate) # Создаем пользователя
         if(resultRegisterOperation["status"] == 8):
             return render_template('registration.html',error = 'User already exists') # Возвращаем html с ошибкой
         elif(resultRegisterOperation['status'] == 7):

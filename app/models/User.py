@@ -14,15 +14,17 @@ class User(UserMixin):
     email = None
     password_hash = None
     is_admin = False
+    phone = None
     level_of_access = -1
 
-    def __init__(self,userID,email,password_hash,last_name,first_name,birthdate):
+    def __init__(self,userID,email,password_hash,last_name,first_name,birthdate,phone):
         self.userID = userID
         self.email = email
         self.password_hash = password_hash
         self.first_name = first_name
         self.last_name = last_name
         self.birthdate = birthdate
+        self.phone = phone
     
     def is_can_write(self):
         return self.is_admin and self.level_of_access > 0
@@ -63,22 +65,22 @@ class User(UserMixin):
 
 
     @staticmethod
-    def registerUser(email,password,last_name,first_name,birthdate):
+    def registerUser(phone,password,last_name,first_name,birthdate):
         result = {}
-        row = SqlExecuter.getOneRowsPacked('select * from Покупатель where email="{}";'.format(email))
+        row = SqlExecuter.getOneRowsPacked('select * from user where tel="{}";'.format(phone))
         if(row is not None):# Проверка,если пользователь с таким email существует
             result['status'] = 8
-            result['message'] = 'User with same email already exists' 
+            result['message'] = 'User with same phone already exists' 
             return result
-        if(not validationForm.validationEmail(email)):# Если неправильно введен email
-            result['status'] = 7
-            result['message'] = 'Incorrect email'
-            return result
+        # if(not validationForm.validationEmail(email)):# Если неправильно введен email
+        #     result['status'] = 7
+        #     result['message'] = 'Incorrect email'
+        #     return result
 
         lastrowid = SqlExecuter.executeModif(
-            'insert into Покупатель(`email`,`last_name`,`first_name`,`birthdate`,`password_hash`) \
+            'insert into user(`tel`,`lname`,`fname`,`bdate`,`pass_hash`) \
                 values("{}","{}","{}","{}","{}")'.format(
-                    email,last_name,first_name,birthdate,md5helper.ecnrypt(password))
+                    phone,last_name,first_name,birthdate,md5helper.ecnrypt(password))
                 )
         result["status"] = 0
         result["message"] = "OK"
@@ -89,7 +91,7 @@ class User(UserMixin):
     @staticmethod
     def getInfo(value,column='id'):
         result = {}
-        row = SqlExecuter.getOneRowsPacked('select * from Покупатель where {} = {};'.format(column,value))
+        row = SqlExecuter.getOneRowsPacked('select * from user where {} = {};'.format(column,value))
         if(row is None):
             result['data'] = {}
             result['status'] = 1
@@ -111,13 +113,14 @@ class User(UserMixin):
             password = data['password']
             birthdate = data['birthdate']
             email = data['email']
+            tel = data['phone']
         except KeyError:
             result['status'] = 6
             result['message'] = 'Required field is missing'
             return result
         try:
             SqlExecuter.executeModif(
-                'insert into Покупатель values("{}","{}",NULL,"{}","{}","{}");'.format(
+                'insert into user values("{}","{}",NULL,"{}","{}","{}");'.format(
                     last_name,first_name,
                     email,birthdate,
                     md5helper.ecnrypt(password)
@@ -131,18 +134,18 @@ class User(UserMixin):
         return result
     
     @staticmethod
-    def validateUser(email,password):
+    def validateUser(phone,password):
         row = SqlExecuter.getOneRowsPacked(
-            'select * from Покупатель where email \
-             = "{}" and password_hash = "{}"'.format(email,md5helper.ecnrypt(password))
+            'select * from user where tel \
+             = "{}" and pass_hash = "{}"'.format(phone,md5helper.ecnrypt(password))
             )
         return row is not None
 
     @staticmethod
-    def validateUserAndReturnUserID(email,password):
+    def validateUserAndReturnUserID(phone,password):
         row = SqlExecuter.getOneRowsPacked(
-            'select * from Покупатель where email \
-             = "{}" and password_hash = "{}"'.format(email,md5helper.ecnrypt(password))
+            'select * from user where tel \
+             = "{}" and pass_hash = "{}"'.format(phone,md5helper.ecnrypt(password))
             )
         if(row is None):
             return -1

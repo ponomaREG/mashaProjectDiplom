@@ -8,15 +8,15 @@ from app.models.User import *
 
 @login_manager.user_loader
 def load_user(userID):
-    row = SqlExecuter.getOneRowsPacked('select * from Покупатель where id = {};'.format(userID))
+    row = SqlExecuter.getOneRowsPacked('select * from user where id = {};'.format(userID))
     if(row is None):
         return None
-    user = User(userID = row['id'],email = row['email'],
-    password_hash = row['password_hash'],last_name=row['last_name'],
-    first_name =row['first_name'] ,birthdate = row['birthdate'])
-    if(checkIfUserAdmin(userID)):
-        user.set_level_of_access(getLevelOfAccess(userID))
-        user.set_admin(True)
+    user = User(userID = row['id'],email = row['mail'],
+    password_hash = row['pass_hash'],last_name=row['lname'],
+    first_name =row['fname'] ,birthdate = row['bdate'],phone=row['tel'])
+    # if(checkIfUserAdmin(userID)):
+    #     user.set_level_of_access(getLevelOfAccess(userID))
+    #     user.set_admin(True)
     return user
 
 
