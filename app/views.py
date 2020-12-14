@@ -9,9 +9,8 @@ from app.models.Order import Order
 from app.models.Holland import Holland
 from app.models.SqlExecuter import SqlExecuter
 from app.models.Subscribe import Subscribe
+from app.models.Admin import Admin
 from app.models.Result import Result
-from app.admin.models import *
-from app.admin.views import *
 from utils import pageHelper
 import flask_login
 from utils import sqlQueryHelper, tagsHelper
@@ -185,6 +184,51 @@ def subscribeUser():
         return redirect(url_for("userInfo"))
     result = Subscribe.subscribeUser(user)
     return redirect(url_for('userInfo'))
+
+
+#-------------------------------------------------------------------
+#ADMIN BLOCK
+#-------------------------------------------------------------------
+
+
+@app.route('/admin',methods=['GET','POST'])
+@flask_login.current_user
+def adminPage():
+    if(flask_login.current_user.is_admin):
+        columnNamesUsers = Admin.getColumnsOfTable('user')
+        columnNamesPairs = Admin.getColumnsOfTable('pair')
+        if(request.method == "GET"):
+            return render_template('admin-page.html',columnNamesUsers = columnNamesUsers,columnNamesPairs = columnNamesPairs)
+        else:
+             method = request.form.get('method',type=int)
+
+             if(method == 1):
+                column = request.form.get('column')
+                value = request.form.get('value')
+                resultOfResponseToDB = Admin.getInfoOfUserBy(column,value)
+             elif(method == 2):
+                column = request.form.get('column')
+                value = request.form.get('value')
+                resultOfResponseToDB = Admin.getInfoOfPairBy(column,value)
+             elif(method == 3):
+                 desc = request.form.get('desc')
+                 productID = request.form.get('productID-3',type=int)
+                 if(Admin.is_admin_can_write(flask_login.current_user.userID)):
+                    resultOfResponseToDB = Admin.setNewValueBook(productID,"description",desc,flask_login.current_user.userID)
+                 else:
+                     resultOfResponseToDB = {}
+                     resultOfResponseToDB['status'] = 131
+             elif(method == 4):
+                 price = request.form.get('price',type=float)
+                 productID = request.form.get('productID-4',type=int)
+                 if(Admin.is_admin_can_write(flask_login.current_user.userID)):
+                    resultOfResponseToDB = Admin.setNewValueBook(productID,'cost_sale',price,flask_login.current_user.userID)
+                 else:
+                     resultOfResponseToDB = {}
+                     resultOfResponseToDB['status'] = 131
+
+    else:
+        return redirect(url_for('hollandStartPage'))
 
 @app.route('/logout',methods=['GET'])
 @flask_login.login_required

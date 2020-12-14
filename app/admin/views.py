@@ -128,13 +128,8 @@ def adminGetProductInfo():
                      resultOfResponseToDB = {}
                      resultOfResponseToDB['status'] = 131
              elif(method == 3):
-                 desc = request.form.get('desc')
                  productID = request.form.get('productID-3',type=int)
-                 if(Admin.is_admin_can_write(flask_login.current_user.userID)):
-                    resultOfResponseToDB = Admin.setNewValueBook(productID,"description",desc,flask_login.current_user.userID)
-                 else:
-                     resultOfResponseToDB = {}
-                     resultOfResponseToDB['status'] = 131
+                 resultOfResponseToDB = Admin.setNewValueBook(productID,"description",desc,flask_login.current_user.userID)
              elif(method == 4):
                  price = request.form.get('price',type=float)
                  productID = request.form.get('productID-4',type=int)
