@@ -14,17 +14,16 @@ def load_user(userID):
     user = User(userID = row['id'],email = row['mail'],
     password_hash = row['pass_hash'],last_name=row['lname'],
     first_name =row['fname'] ,birthdate = row['bdate'],phone=row['tel'])
-    # if(checkIfUserAdmin(userID)):
-    #     user.set_level_of_access(getLevelOfAccess(userID))
-    #     user.set_admin(True)
+
+    if checkIfUserSubscriber(userID):
+        user.set_isSubscriber(True)
+    if(checkIfUserAdmin(userID)):
+        user.set_admin(True)
     return user
 
 
+def checkIfUserSubscriber(userID):
+    return SqlExecuter.getOneRowsPacked("select * from subscriber where uid = {};".format(userID)) is not None
 
 def checkIfUserAdmin(userID):
-    return SqlExecuter.getOneRowsPacked('select * from Админ where user_id = {};'.format(userID)) is not None
-
-def getLevelOfAccess(userID):
-    if(checkIfUserAdmin(userID)):
-        row = SqlExecuter.getOneRowsPacked('select * from Админ where user_id = {};'.format(userID))
-        return int(row['level_of_access'])
+    return SqlExecuter.getOneRowsPacked('select * from stuff where user_id = {};'.format(userID)) is not None

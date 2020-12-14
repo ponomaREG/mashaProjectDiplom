@@ -8,13 +8,13 @@
  <body>
   <div class="bg">
       <div class="header">
-              <div class="mihail"><a href="mainpage.html">Холланд</a></div>
+              <div class="mihail"><a href="{{url_for('hollandStartPage')}}">Холланд</a></div>
           <nav>
               <ul>
                   <li><a href="biography.html">Биография</a></li>
                   <li><a href="chronology.html">Галерея</a></li>
                   {% if user.is_authenticated %}
-                  <li><a href="p.html">Личный кабинет</a></li>
+                  <li><a href="{{ url_for('userInfo')}}">Личный кабинет</a></li>
                   {% endif %}
               </ul>
           </nav>

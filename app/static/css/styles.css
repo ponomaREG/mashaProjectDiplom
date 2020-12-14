@@ -36,6 +36,7 @@
   0%{background-position:-300px 0}
   100%{background-position:300px -300px}
   }
+
   .section-title{-webkit-animation-play-state:running;-moz-animation-play-state:running;animation-play-state:running;color:transparent;background:url(https://obninsksite.ru/assets/theme/images/blog/square.svg) no-repeat #ECE7EA;background-size:cover;-webkit-text-fill-color:transparent;-moz-text-fill-color:transparent;-webkit-background-clip:text;-moz-background-clip:text;background-clip:text;-webkit-animation:move-background 20s infinite linear alternate;-moz-animation:move-background 20s infinite linear alternate;animation:move-background 20s infinite linear alternate}
 
   .center{
@@ -50,6 +51,7 @@
     color: #ffffff; 
     font-size:100%;
     text-align:justify;
+    justify-content: center;
     position: relative;
     font-family: "Roboto", sans-serif;
     top:-40px;
@@ -66,6 +68,7 @@
   }
 
   .center-button button{
+
     font-family: "Roboto", sans-serif;
 
     text-transform: uppercase;
@@ -76,14 +79,13 @@
 
     width: 40%;
 
-
     border-radius: 5px;
+
     border: #9370DB;
 
     padding: 20px;
 
     color: #FFFFFF;
-
 
     font-size: 20px;
 
@@ -92,7 +94,9 @@
     transition: all 0.3 ease;
 
     cursor: pointer;
-     box-shadow:  0px 0.9px 0px 0px rgba(0,0,0,0.75);
+
+    box-shadow:  0px 0.9px 0px 0px rgba(0,0,0,0.75);
+
     margin-bottom: 30px;
   }
 
@@ -115,7 +119,7 @@ a:hover {
 }
 
 a:visited {
-    color: #4694AE;
+    color: #B7EBDA;
 }
 
 .header {
@@ -195,3 +199,78 @@ a:hover {
 }
 
 /*менюшка закончиласб*/
+
+.form {
+
+position: relative;
+
+z-index: 1;
+
+background: #FFFFFF;
+
+border-radius: 4px;
+
+max-width: 360px;
+
+margin: 0 auto 100px;
+padding-left:35px; 
+padding-right:35px;
+text-align: center;
+
+box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+font-family: "Roboto", sans-serif;
+  font-size: 20px;
+}
+
+.form-buttons{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.form-buttons button{
+  margin-bottom: 15px;
+  font-family: "Roboto", sans-serif;
+
+  text-transform: uppercase;
+
+  outline: 0;
+
+  background: #9370DB;
+
+  border-radius: 5px;
+
+  border: #9370DB;
+
+  padding: 20px;
+
+  color: #FFFFFF;
+
+  font-size: 20px;
+
+  -webkit-transition: all 0.3 ease;
+
+  transition: all 0.3 ease;
+
+  cursor: pointer;
+
+  box-shadow:  0px 0.9px 0px 0px rgba(0,0,0,0.75);
+}
+
+.form-center{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 100%;
+}
+
+.center-text-user{
+    color: #ffffff; 
+    font-size:140%;
+    text-align:justify;
+    justify-content: center;
+    position: relative;
+    font-family: "Roboto", sans-serif;
+    top: -120px;
+  }

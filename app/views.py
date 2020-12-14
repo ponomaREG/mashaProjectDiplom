@@ -8,6 +8,8 @@ from app.models.Cart import Cart
 from app.models.Order import Order
 from app.models.Holland import Holland
 from app.models.SqlExecuter import SqlExecuter
+from app.models.Subscribe import Subscribe
+from app.models.Result import Result
 from app.admin.models import *
 from app.admin.views import *
 from utils import pageHelper
@@ -37,6 +39,10 @@ def main():
     return redirect(url_for('loginUser'))
 
 
+#-------------------------------------------------------------------
+#QUIZ BLOCK
+#-------------------------------------------------------------------
+
 @app.route("/holland",methods=['GET'])
 def hollandStartPage():
     clearSession(Holland.getKeys())
@@ -45,17 +51,23 @@ def hollandStartPage():
 
 
 @app.route("/holland/result",methods=["GET"])
+@flask_login.login_required
 def hollandResult():
     if(not checkKeysInSession(Holland.getKeys())):
         return redirect(url_for("hollandStartPage"))
     values = getValuesFromSession(Holland.getKeys())
     values.pop("previously_pair")
     valuesSort = Holland.sortDictByValues(values)
-    return str(valuesSort)
+    code = ""
+    for vals in valuesSort:
+        code += vals[0]
+    result = Result.insertResult(code,flask_login.current_user.userID)
+    return jsonify(result)
 
     
 
 @app.route("/holland/<int:number>",methods=["GET","POST"])
+@flask_login.login_required
 def hollandQuiz(number):
     print(session)
     if((not checkKeysInSession(Holland.getKeys())) or (session.get('previously_pair') + 1 != number)):
@@ -85,6 +97,11 @@ def hollandQuiz(number):
         session['previously_pair'] = number
         return redirect(url_for("hollandQuiz",number=number+1))
 
+
+
+#-------------------------------------------------------------------
+#AUTH BLOCK
+#-------------------------------------------------------------------
 
 @app.route("/login",methods = ['GET','POST'])
 def loginUser():
@@ -127,10 +144,47 @@ def registrationUser():
         return render_template('registration.html')# Возвращаем html с формой
 
 
+
+#-------------------------------------------------------------------
+#USER INFO BLOCK
+#-------------------------------------------------------------------
+
 @app.route('/user',methods=['GET'])
 @flask_login.login_required # Пример декоратора
 def userInfo():
-        return render_template('user-profile.html',user = flask_login.current_user)
+        return render_template('user.html',user = flask_login.current_user)
+
+
+@app.route('/user/results',methods=['GET'])
+@flask_login.login_required
+def userResults():
+    if(flask_login.current_user.is_subscriber):
+        result = Result.getAllResultsOfUser(flask_login.current_user.userID)
+    else:
+        result = Result.getOneResultOfUser(flask_login.current_user.userID)
+    if(result['status'] == 0):
+        return 123
+    elif(result['status'] == 3):
+        return 234
+    else:
+        return redirect(url_for('userInfo'))
+
+
+
+#-------------------------------------------------------------------
+#SUB BLOCK
+#-------------------------------------------------------------------
+
+
+
+@app.route('/sub',methods=['GET'])
+@flask_login.login_required
+def subscribeUser():
+    user = flask_login.current_user
+    if(user.is_subscriber):
+        return redirect(url_for("userInfo"))
+    result = Subscribe.subscribeUser(user)
+    return redirect(url_for('userInfo'))
 
 @app.route('/logout',methods=['GET'])
 @flask_login.login_required
