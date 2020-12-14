@@ -5,7 +5,7 @@
    </head>
    <body>
       <h3>Столбцы</h3>
-      <form method="POST" action="{{ url_for('adminGetProductInfo') }}" enctype='multipart/form-data'>
+      <form method="POST" action="{{ url_for('adminPage') }}" enctype='multipart/form-data'>
          <h3>Методы</h3>
          <input type="radio" id = 1 name="method" value=1 checked>
          <label for=1>Получить информацию о пользователе</label>
@@ -20,37 +20,38 @@
          <label for=4>Удалить пару</label>
          <br>
          <div id="method-2-block" hidden>
-            <select id="admin-column-select" name="column">
+            <br>
+            <select id="admin-column-select" name="column-pair">
                {% for column in columnNamesPairs %}
                <option value="{{column['COLUMN_NAME']}}">{{loop.index}}. {{column['COLUMN_NAME']}}</option>
                {% endfor %}
             </select>
             <br>
-            Значение:<input type="text" name="value">
+            Значение:<input type="text" name="value-pair">
          </div>
-         <br>
          <div id="method-1-block">
-            <select id="admin-column-select" name="column">
+            <br>
+            <select id="admin-column-select" name="column-user">
                {% for column in columnNamesUsers %}
                <option value="{{column['COLUMN_NAME']}}">{{loop.index}}. {{column['COLUMN_NAME']}}</option>
                {% endfor %}
             </select>
             <br>
-            Значение:<input type="text" name="value">
+            Значение:<input type="text" name="value-user">
          </div>
          <div id="method-4-block" hidden>
             <br>
-            <input id=41 type="number" name="productID-4">
-            <label for=41 >Идентификатор пользователя</label>
+            <input id=41 type="number" name="pairID">
+            <label for=41 >Идентификатор пары</label>
          </div>
          <div id="method-3-block" hidden>
             <br>
-            <input id=30 type="number" name="productID-3" min="0">
-            <label for=30 >Идентификатор пары</label>
+            <input id=30 type="number" name="userID" min="0">
+            <label for=30 >Идентификатор пользователя</label>
          </div>
          <button type="submit">ОК</button>
       </form>
-      {% include 'base/admin-table.html' %}
+      {% include 'admin-table.html' %}
       <script src="{{url_for('static',filename='js/jquery-3.3.1.min.js')}}"></script>
       <script type="text/javascript">
          var currentBlock = $('#method-1-block')

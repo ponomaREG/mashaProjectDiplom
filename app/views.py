@@ -192,40 +192,31 @@ def subscribeUser():
 
 
 @app.route('/admin',methods=['GET','POST'])
-@flask_login.current_user
+@flask_login.login_required
 def adminPage():
     if(flask_login.current_user.is_admin):
         columnNamesUsers = Admin.getColumnsOfTable('user')
         columnNamesPairs = Admin.getColumnsOfTable('pair')
         if(request.method == "GET"):
-            return render_template('admin-page.html',columnNamesUsers = columnNamesUsers,columnNamesPairs = columnNamesPairs)
+            return render_template('admin-page.html',columnNamesUsers = columnNamesUsers['data'],columnNamesPairs = columnNamesPairs['data'])
         else:
              method = request.form.get('method',type=int)
 
              if(method == 1):
-                column = request.form.get('column')
-                value = request.form.get('value')
+                column = request.form.get('column-user')
+                value = request.form.get('value-user')
                 resultOfResponseToDB = Admin.getInfoOfUserBy(column,value)
              elif(method == 2):
-                column = request.form.get('column')
-                value = request.form.get('value')
+                column = request.form.get('column-pair')
+                value = request.form.get('value-pair')
                 resultOfResponseToDB = Admin.getInfoOfPairBy(column,value)
              elif(method == 3):
-                 desc = request.form.get('desc')
-                 productID = request.form.get('productID-3',type=int)
-                 if(Admin.is_admin_can_write(flask_login.current_user.userID)):
-                    resultOfResponseToDB = Admin.setNewValueBook(productID,"description",desc,flask_login.current_user.userID)
-                 else:
-                     resultOfResponseToDB = {}
-                     resultOfResponseToDB['status'] = 131
+                 userID = request.form.get('userID',type=int)
+                 resultOfResponseToDB = Admin.deleteRowFromTable('user','id',userID)
              elif(method == 4):
-                 price = request.form.get('price',type=float)
-                 productID = request.form.get('productID-4',type=int)
-                 if(Admin.is_admin_can_write(flask_login.current_user.userID)):
-                    resultOfResponseToDB = Admin.setNewValueBook(productID,'cost_sale',price,flask_login.current_user.userID)
-                 else:
-                     resultOfResponseToDB = {}
-                     resultOfResponseToDB['status'] = 131
+                 pairID = request.form.get('pairID',type=int)
+                 resultOfResponseToDB = Admin.deleteRowFromTable('pair','id',pairID)
+             return render_template('admin-page.html',columnNamesUsers = columnNamesUsers['data'],columnNamesPairs = columnNamesPairs['data'],resultOfResponse = resultOfResponseToDB)
 
     else:
         return redirect(url_for('hollandStartPage'))

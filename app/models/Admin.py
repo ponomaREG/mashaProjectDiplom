@@ -29,6 +29,23 @@ class Admin:
         return res
 
     @staticmethod
+    def __makeResultResponseExecution(query):
+        cursor = connection.cursor()
+        cursor.execute(query)
+        lid = cursor.lastrowid
+        cursor.close()
+        res = {}
+        if(lid > -1):
+            res['status'] = 0
+            res['data'] = {"lid":lid}
+            res['keys'] = ["lid"]
+        else:
+            res['status'] = 3
+            res['data'] = {"lid":lid}
+            res['keys'] = ["lid"]
+        return res
+
+    @staticmethod
     def getInfoOfUserBy(columnName,value):
         query = 'select * from user where {} like "%{}%";'.format(columnName,value)
         return Admin.__makeResultResponse(query)
@@ -40,13 +57,18 @@ class Admin:
 
     @staticmethod
     def deleteRowFromTable(table,column,value):
-        
+        if(type(value) == int):
+            query = "delete from {} where {} = {};"
+        else:
+            query = "delete from {} where {} = '{}';"
+        query = query.format(table,column,value)
+        return Admin.__makeResultResponseExecution(query)
 
 
 
 
     @staticmethod
     def getColumnsOfTable(tableName):
-        return Admin.__makeResultResponse('SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_NAME`="{}";'.format(tableName))
+        return Admin.__makeResultResponse('SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_NAME`="{}" and `TABLE_SCHEMA` = "dating";'.format(tableName))
 
    
