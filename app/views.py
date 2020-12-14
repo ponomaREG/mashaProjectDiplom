@@ -1,4 +1,4 @@
-from flask import jsonify, request, redirect, url_for, render_template
+from flask import jsonify, request, redirect, url_for, render_template, session
 from app import app
 from app import login_manager
 from app.model import load_user
@@ -37,24 +37,53 @@ def main():
     return redirect(url_for('loginUser'))
 
 
-@app.route("/whatthefuck",methods=["GET"])
-def what():
-    data = SqlExecuter.getAllRowsPacked("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='dating';")
-    return jsonify({'data':data})
-    
-
 @app.route("/holland",methods=['GET'])
 def hollandStartPage():
+    clearSession(Holland.getKeys())
+    setKeysSession(Holland.getKeys())
     return render_template("holland.html",user = flask_login.current_user)
 
 
-@app.route("/holland/<int:number>")
+@app.route("/holland/result",methods=["GET"])
+def hollandResult():
+    if(not checkKeysInSession(Holland.getKeys())):
+        return redirect(url_for("hollandStartPage"))
+    values = getValuesFromSession(Holland.getKeys())
+    values.pop("previously_pair")
+    valuesSort = Holland.sortDictByValues(values)
+    return str(valuesSort)
+
+    
+
+@app.route("/holland/<int:number>",methods=["GET","POST"])
 def hollandQuiz(number):
-    result = Holland.getWords(number)
-    if(result['status'] == 0):
-        return render_template("quiz.html",data=result['data'])
+    print(session)
+    if((not checkKeysInSession(Holland.getKeys())) or (session.get('previously_pair') + 1 != number)):
+        return redirect(url_for("hollandStartPage"))
+    if(request.method == "GET"):
+        countOfPairs = Holland.getCountOfPairs()
+        if(number > countOfPairs):
+            resultOfQuiz = {}
+            for key in Holland.getKeys():
+                resultOfQuiz[key] = session[key]
+            return redirect(url_for("hollandResult"))
+        if(number == 1):
+            session['countOfPairs'] = countOfPairs
+        result = Holland.getWords(number)
+        if(result['status'] == 0):
+            return render_template("quiz.html",data=result['data'])
+        else:
+            return redirect(url_for('main'))
     else:
-        return redirect(url_for('main'))
+        if("word1" in request.form):
+            letter = request.form.get("word1")
+        elif("word2" in request.form):
+            letter = request.form.get("word2")
+        else:
+            return redirect(url_for("hollandStartPage"))
+        session[letter] = session.get(letter) + 1
+        session['previously_pair'] = number
+        return redirect(url_for("hollandQuiz",number=number+1))
 
 
 @app.route("/login",methods = ['GET','POST'])
@@ -112,6 +141,41 @@ def logoutUser():
 @app.errorhandler(404)
 def page_not_found(e):
     return redirect(url_for('main'))
+
+
+@app.route("/counter",methods=["GET"])
+def counter():
+    if("visits" in session):
+        session["visits"] = session.get("visits") + 1
+        
+    else:
+        session["visits"] = 1
+    return "<h1>Counter:{}</h1>".format(session.get("visits"))
+
+
+def clearSession(keys):
+    for key in keys:
+        if(key in session):
+            session.pop(key)
+
+def setKeysSession(keys):
+    for key in keys:
+        session[key] = 0
+
+def checkKeysInSession(keys):
+    for key in keys:
+        if(key not in session):
+            return False
+    return True
+
+def getValuesFromSession(keys):
+    resultOfQuiz = {}
+    for key in Holland.getKeys():
+                resultOfQuiz[key] = session[key]
+    return resultOfQuiz
+
+
+
 
 
 

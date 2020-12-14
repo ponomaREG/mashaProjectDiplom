@@ -245,12 +245,15 @@ font-family: "Roboto", sans-serif;
 
 <div class="form">
 
+<form action="{{url_for('hollandQuiz',number=data.id)}}" method="POST">
+    <p text-align: justify>Выберите один из вариантов ответа</p>
 
-<p text-align: justify>Выберите один из вариантов ответа</p>
+    <button type="submit" name="word1" value="{{data.letter1}}">{{data.word1}}</button>
 
-<button type="submit">{{data.word1}}</button>
 
-<button type="submit">{{data.word2}}</button>
+    <button type="submit" name="word2" value="{{data.letter2}}">{{data.word2}}</button>
+</form>
+
 
 
 
