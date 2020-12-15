@@ -11,9 +11,9 @@
               <div class="mihail"><a href="{{url_for('hollandStartPage')}}">Холланд</a></div>
           <nav>
               <ul>
-                  <li><a href="biography.html">Пары</a></li>
+                  <li><a href="{{ url_for('userPairs')}}">Пары</a></li>
                   <li><a href="{{ url_for('hollandStartPage')}}">Пройти тест</a></li>
-                  <li><a href="user.html">Результаты теста</a></li>
+                  <li><a href="{{ url_for('userResults')}}">Результаты теста</a></li>
               </ul>
           </nav>
   </div>

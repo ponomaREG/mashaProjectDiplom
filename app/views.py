@@ -11,6 +11,7 @@ from app.models.SqlExecuter import SqlExecuter
 from app.models.Subscribe import Subscribe
 from app.models.Admin import Admin
 from app.models.Result import Result
+from app.models.Pair import Pair
 from utils import pageHelper
 import flask_login
 from utils import sqlQueryHelper, tagsHelper
@@ -60,8 +61,9 @@ def hollandResult():
     code = ""
     for vals in valuesSort:
         code += vals[0]
-    result = Result.insertResult(code,flask_login.current_user.userID)
-    return jsonify(result)
+    Result.insertResult(code,flask_login.current_user.userID)
+    Pair.findNewPairsForUser(flask_login.current_user.userID,code)
+    return redirect(url_for('userResults'))
 
     
 
@@ -162,11 +164,21 @@ def userResults():
     else:
         result = Result.getOneResultOfUser(flask_login.current_user.userID)
     if(result['status'] == 0):
-        return 123
+        return render_template('results.html',data=result['data'])
     elif(result['status'] == 3):
-        return 234
+        return render_template('results.html',data=result['data'])
     else:
         return redirect(url_for('userInfo'))
+
+
+@app.route("/user/pairs",methods=['GET'])
+@flask_login.login_required
+def userPairs():
+    result = Pair.getPairsOfUser(flask_login.current_user.userID)
+    if(result['status'] == 0):
+        return render_template('pairs.html',pairs = result['data'])
+    elif(result['status'] == 3):
+        return render_template('pairs.html',pairs = result['data'])
 
 
 

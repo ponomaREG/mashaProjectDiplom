@@ -22,7 +22,7 @@ class Result:
     @staticmethod
     def getOneResultOfUser(userID):
         response = {}
-        data = SqlExecuter.getOneRowsPacked('select code,date from result where user_id = {};'.format(userID))
+        data = SqlExecuter.getOneRowsPacked('select code,date from result where user_id = {} order by id desc;'.format(userID))
         if(data is None):
             response['status'] = 3
             response['data'] = []
