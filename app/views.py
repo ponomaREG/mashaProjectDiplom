@@ -194,7 +194,7 @@ def subscribeUser():
     user = flask_login.current_user
     if(user.is_subscriber):
         return redirect(url_for("userInfo"))
-    result = Subscribe.subscribeUser(user)
+    Subscribe.subscribeUser(user)
     return redirect(url_for('userInfo'))
 
 

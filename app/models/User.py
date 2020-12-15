@@ -87,6 +87,14 @@ class User(UserMixin):
         result["userID"] = lastrowid
         return result
         
+
+
+    @staticmethod
+    def getSubInfo(userID):
+        row = SqlExecuter.getOneRowsPacked('select * from subscriber where uid = {};'.format(userID))
+        if(row is not None):
+            return (row['date_begin'],row['date_end'])
+
     
     @staticmethod
     def getInfo(value,column='id'):

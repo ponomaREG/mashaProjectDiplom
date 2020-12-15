@@ -41,3 +41,4 @@ class Result:
         else:
             response['status'] = 0
             response['data'] = data
+        return response
