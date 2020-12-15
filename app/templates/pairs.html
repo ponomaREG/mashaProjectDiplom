@@ -28,7 +28,7 @@
             <td>{{ user.fname }}</td>
             <td>{{ user.lname }}</td>
             <td>{{ user.tel }}</td>
-            <td><img class="img" src="dog.jpg" alt="псинка"></td>
+            <td><img class="img" src="{{url_for('static',filename='img/dog.jpg')}}" alt="псинка"></td>
           </tr>
           {% endfor %}
         </table>

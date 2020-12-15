@@ -1,6 +1,4 @@
-from app import db
 from app.models.SqlExecuter import connection 
-from app.admin.logger import AdminLogger as Logger
 
 
 

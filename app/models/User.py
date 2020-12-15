@@ -1,6 +1,4 @@
 from flask_login import UserMixin
-from app import db
-from app.models.Cart import Cart
 from utils import md5helper
 from utils import validationForm
 from app.models.SqlExecuter import SqlExecuter
@@ -50,19 +48,6 @@ class User(UserMixin):
     def get_id(self):
         return str(self.userID)
 
-    def getTotalCostOfCart(self):
-        return Cart.countTotalCostOfUser(self.userID)
-
-    def getCountOfItemsInCart(self):
-        return Cart.getCountOfItemsInCart(self.userID)["data"][0]
-
-    def getUserMarkTo(self,productID):
-        row = SqlExecuter.getOneRowsPacked('select mark from Рейтинг where user_id = {} and product_id = {};'.format(self.userID,productID))
-        if(row is None):
-            return None
-        else:
-            return float(row['mark'])
-
 
     @staticmethod
     def registerUser(phone,password,last_name,first_name,birthdate):
@@ -111,36 +96,7 @@ class User(UserMixin):
         return result
 
 
-    #LEGACY
-    @staticmethod
-    def addUser(data):
-        result = {}
-        try:
-            last_name = data['last_name']
-            first_name = data['first_name']
-            password = data['password']
-            birthdate = data['birthdate']
-            email = data['email']
-            tel = data['phone']
-        except KeyError:
-            result['status'] = 6
-            result['message'] = 'Required field is missing'
-            return result
-        try:
-            SqlExecuter.executeModif(
-                'insert into user values("{}","{}",NULL,"{}","{}","{}");'.format(
-                    last_name,first_name,
-                    email,birthdate,
-                    md5helper.ecnrypt(password)
-                ))
-        except Exception:
-            result['status'] = 1
-            result['message'] = 'SQL runtime error'
-            return result
-        result['status'] = 0
-        result['message'] = 'OK'
-        return result
-    
+   
     @staticmethod
     def validateUser(phone,password):
         row = SqlExecuter.getOneRowsPacked(
