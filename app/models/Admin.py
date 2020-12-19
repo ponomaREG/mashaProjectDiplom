@@ -32,6 +32,7 @@ class Admin:
         cursor.execute(query)
         lid = cursor.lastrowid
         cursor.close()
+        connection.commit()
         res = {}
         if(lid > -1):
             res['status'] = 0
@@ -63,6 +64,25 @@ class Admin:
         return Admin.__makeResultResponseExecution(query)
 
 
+    @staticmethod
+    def deleteRowFromTableByWhere(table,dict):
+        query = "delete from {} where {}"
+        whereClause = ""
+        keys = list(dict.keys())
+        for i in range(len(keys)):
+            key = keys[i]
+            val = dict[key]
+            if(type(val) == int):
+                whereClause += "{} = {}".format(key,val)
+            else:
+                whereClause += "{} = '{}'".format(key,val)
+            if(i == len(keys) - 1):
+                whereClause+=";"
+            else:
+                whereClause+=" and "
+        return Admin.__makeResultResponseExecution(query.format(table,whereClause))
+
+
 
 
     @staticmethod
@@ -70,3 +90,4 @@ class Admin:
         return Admin.__makeResultResponse('SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_NAME`="{}" and `TABLE_SCHEMA` = "dating";'.format(tableName))
 
    
+

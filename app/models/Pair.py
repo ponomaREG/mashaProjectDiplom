@@ -23,13 +23,12 @@ class Pair:
         correctUsersIdForMatch = []
         # potentMatchesQuery = "select * from result where user_id != {0} and code like '{1}%' and user_id not in (select user_id_1 from pair where user_id_2 = {0}) and user_id not in (select user_id_2 from pair where user_id_1 = {0}) order by id desc;".format(userID,code[0:2])
         # pMatches = SqlExecuter.getAllRowsPacked(potentMatchesQuery)
-        query = "select * from result where user_id != {0} and code like '{1}%' and user_id not in (select user_id_1 from pair where user_id_2 = {0}) and user_id not in (select user_id_2 from pair where user_id_1 = {0}) order by id desc;".format(userID,code[0:2])
+        query = "select * from result where user_id != {0} and code like '{1}%' and user_id not in (select user_id_1 from pair where user_id_2 = {0}) and user_id not in (select user_id_2 from pair where user_id_1 = {0}) order by date desc;".format(userID,code[0:2])
         data = SqlExecuter.getAllRowsPacked(query)
         uniqueID = []
         for row in data:
             uniqueID.append(row['user_id'])
         uniqueID = list(set(uniqueID))
-        print(uniqueID)
         for id in uniqueID:
             lastResultOfUser = SqlExecuter.getOneRowsPacked("select * from result where user_id = {} order by id desc LIMIT 1;".format(id))
             print(lastResultOfUser)

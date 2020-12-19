@@ -12,6 +12,8 @@ from app.models.Pair import Pair
 import flask_login
 from werkzeug.utils import secure_filename
 from utils.security import Security
+from datetime import datetime,timedelta,timezone
+from urllib.parse import unquote_to_bytes,parse_qsl
 import os
 
 
@@ -19,6 +21,22 @@ import os
 @login_manager.unauthorized_handler
 def unauthorized_handler():
     return redirect(url_for('loginUser'))
+
+def parse(query_string):
+    return dict(parse_qsl(query_string, errors='ignore')), unquote_to_bytes(query_string)
+
+@app.route('/api/authorize', methods=['GET'])
+def authorize():
+    args, decoded = parse(request.query_string)
+    command = args.get(b'cmd')
+    if not command:
+        return {'error': 'No command specified'}, 400
+    if command != b'ls':
+        return {'error': 'Insufficient privileges'}, 403
+    expiry = int((datetime.now(timezone.utc) + timedelta(seconds=15)).timestamp())
+    expiry_arg = b'expiry=' + str(expiry).encode() + b'&'
+    print(expiry_arg+decoded)
+    return {'data':expiry_arg+decoded}
     
     
 # @app.route("/",methods=['GET'])
@@ -65,15 +83,12 @@ def hollandResult():
 @app.route("/holland/<int:number>",methods=["GET","POST"])
 @flask_login.login_required
 def hollandQuiz(number):
-    print(session)
     if((not checkKeysInSession(Holland.getKeys())) or (session.get('previously_pair') + 1 != number)):
         return redirect(url_for("hollandStartPage"))
     if(request.method == "GET"):
         countOfPairs = Holland.getCountOfPairs()
         if(number > countOfPairs):
             resultOfQuiz = {}
-            for key in Holland.getKeys():
-                resultOfQuiz[key] = session[key]
             return redirect(url_for("hollandResult"))
         if(number == 1):
             session['countOfPairs'] = countOfPairs
@@ -132,8 +147,6 @@ def registrationUser():
         resultRegisterOperation = User.registerUser(phone,pswd,last_name,first_name,birthdate) # Создаем пользователя
         if(resultRegisterOperation["status"] == 8):
             return render_template('registration.html',error = 'User already exists') # Возвращаем html с ошибкой
-        elif(resultRegisterOperation['status'] == 7):
-            return render_template('registration.html',error = 'Incorrect email') # Возвращаем html с ошибкой
         flask_login.login_user(load_user(resultRegisterOperation["userID"]),remember=True) # Авторизируем пользователя
         return redirect(url_for('userInfo'))
     else:
@@ -221,8 +234,10 @@ def adminPage():
                  userID = request.form.get('userID',type=int)
                  resultOfResponseToDB = Admin.deleteRowFromTable('user','id',userID)
              elif(method == 4):
-                 pairID = request.form.get('pairID',type=int)
-                 resultOfResponseToDB = Admin.deleteRowFromTable('pair','id',pairID)
+                 userID1 = request.form.get('userID1',type=int)
+                 userID2 = request.form.get('userID2',type=int)
+                 resultOfResponseToDB = Admin.deleteRowFromTableByWhere('pair',{'user_id_1':userID1,'user_id_2':userID2})
+                 Admin.deleteRowFromTableByWhere('pair',{'user_id_1':userID2,'user_id_2':userID1})
              return render_template('admin-page.html',columnNamesUsers = columnNamesUsers['data'],columnNamesPairs = columnNamesPairs['data'],resultOfResponse = resultOfResponseToDB)
 
     else:
@@ -238,15 +253,6 @@ def logoutUser():
 def page_not_found(e):
     return redirect(url_for('main'))
 
-
-@app.route("/counter",methods=["GET"])
-def counter():
-    if("visits" in session):
-        session["visits"] = session.get("visits") + 1
-        
-    else:
-        session["visits"] = 1
-    return "<h1>Counter:{}</h1>".format(session.get("visits"))
 
 
 def clearSession(keys):
