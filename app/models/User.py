@@ -1,6 +1,5 @@
 from flask_login import UserMixin
 from utils import md5helper
-from utils import validationForm
 from app.models.SqlExecuter import SqlExecuter
 
 
@@ -57,10 +56,6 @@ class User(UserMixin):
             result['status'] = 8
             result['message'] = 'User with same phone already exists' 
             return result
-        # if(not validationForm.validationEmail(email)):# Если неправильно введен email
-        #     result['status'] = 7
-        #     result['message'] = 'Incorrect email'
-        #     return result
 
         lastrowid = SqlExecuter.executeModif(
             'insert into user(`tel`,`lname`,`fname`,`bdate`,`pass_hash`) \

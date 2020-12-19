@@ -16,21 +16,6 @@ connection = pymysql.connect(
 
 class SqlExecuter:
 
-
-    @staticmethod
-    def getOneRow(query):
-        cursor = db.execute(query)
-        row = cursor.fetchone()
-        cursor.close()
-        return row
-
-    @staticmethod
-    def getAllRows(query):
-        cursor = db.execute(query)
-        allRows = cursor.fetchall()
-        cursor.close()
-        return allRows
-
     @staticmethod
     def getOneRowAndColumns(query):
         cursor = connection.cursor()
@@ -47,23 +32,6 @@ class SqlExecuter:
         cursor.close()
         return rows
 
-    @staticmethod
-    def prepareDataByOneRow(row,columns):
-        if(row is None or len(row) == 0):
-            return None
-        keyword = {}
-        for i in range(len(columns)):
-            keyword[columns[i]] = row[i]
-        return keyword 
-
-    @staticmethod
-    def prepareDataByManyRows(allRows,columns):
-        if(allRows is None or len(allRows) == 0):
-            return None
-        data = []
-        for row in allRows:
-            data.append(SqlExecuter.prepareDataByOneRow(row,columns))
-        return data
 
     @staticmethod
     def getAllRowsPacked(query):

@@ -86,9 +86,11 @@ def hollandQuiz(number):
     if((not checkKeysInSession(Holland.getKeys())) or (session.get('previously_pair') + 1 != number)):
         return redirect(url_for("hollandStartPage"))
     if(request.method == "GET"):
-        countOfPairs = Holland.getCountOfPairs()
+        if('countOfPairs' in session):
+            countOfPairs = int(session.get('countOfPairs'))
+        else:
+            countOfPairs = Holland.getCountOfPairs()
         if(number > countOfPairs):
-            resultOfQuiz = {}
             return redirect(url_for("hollandResult"))
         if(number == 1):
             session['countOfPairs'] = countOfPairs
