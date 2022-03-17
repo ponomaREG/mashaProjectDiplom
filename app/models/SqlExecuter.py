@@ -5,8 +5,8 @@ from pymysql.cursors import DictCursor
 connection = pymysql.connect(
     host = 'localhost',
     user = 'root',
-    password = 'Huyhuyhuy123',
-    db = 'dating',
+    password = 'root',
+    db = 'museum',
     charset = 'utf8',
     use_unicode = True,
     cursorclass = DictCursor

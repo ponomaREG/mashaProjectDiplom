@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8" />
+  <title>Коллекции</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+ </head>
+ <body>
+  <div class="bg-tab">
+    <div class="header">
+      <div class="mihail"><a href="{{url_for('main')}}">Галерея</a></div>
+  <nav>
+      <ul>
+          <li><a href="{{ url_for('collectionsPage') }}">Коллекции</a></li>
+          <li><a href="{{url_for('hallsPage')}}">Навигация</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{{ url_for('userInfo')}}">{{ user.fname}} {{ user.lname}}</a></li>
+          {% else %}
+            <li><a href="{{ url_for('loginUser')}}">Войти</a></li>
+          {% endif %}
+
+          
+      </ul>
+  </nav>
+</div>
+    <div class="center">
+        <div class="left-header">
+          <h2 class="left-title">Коллекции</h2>
+        </div>
+      <div class="center-tab">
+        {% if error %}
+          <p>{{ error }}</p>
+        {% else %}
+        <table>
+        {% for row in data %}
+          <tr>
+            <td><a href="{{ url_for('collectionDetailPage', collectionId = row.idcollection) }}">{{ row.collectionname }}</a></td>
+          </tr>
+        {% endfor %}
+      </table>
+        {%endif %}
+      </div>
+    </div>
+  </div>
+  
+ </body>
+</html>

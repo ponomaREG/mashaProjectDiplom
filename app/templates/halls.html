@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8" />
+  <title>Навигация</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+ </head>
+ <body>
+  <div class="bg-halls">
+      <div class="header">
+              <div class="mihail"><a href="{{url_for('main')}}">Галерея</a></div>
+          <nav>
+              <ul>
+                <li><a href="{{url_for('collectionsPage')}}">Коллекции</a></li>
+                  <li><a href="{{url_for('hallsPage')}}">Навигация</a></li>
+                  {% if user.is_authenticated %}
+                    <li><a href="{{ url_for('userInfo')}}">{{ user.fname}} {{ user.lname}}</a></li>
+                  {% else %}
+                    <li><a href="{{ url_for('loginUser')}}">Войти</a></li>
+                  {% endif %}
+                  
+              </ul>
+          </nav>
+  </div>
+    <div class="center">
+<div class="center-tab-nav">
+        <table>
+          
+          <tr>
+            <td><a href="{{ url_for('hallPage', hallName = '1') }}">Зал 1</a></td>
+            <td><a href="{{ url_for('hallPage', hallName = '2') }}">Зал 2</a></td>
+            <td><a href="{{ url_for('hallPage', hallName = '3') }}">Зал 3</a></td>
+          </tr>
+          <tr>
+             <td><p> </p></td>   
+                 <td><p> </p></td>
+                <td><p> </p></td>
+          </tr>
+          <tr>
+                <td><p> </p></td>   
+                 <td><p> </p></td>
+                <td><p> </p></td>
+          <tr>
+                  <td><a href="{{ url_for('hallPage', hallName = '6') }}">Зал 6</a></td>
+            <td><a href="{{ url_for('hallPage', hallName = '5') }}">Зал 5</a></td>
+            <td><a href="{{ url_for('hallPage', hallName = '4') }}">Зал 4</a></td>
+          </tr>
+          <tr>
+                 <td><p> </p></td>   
+                 <td><p> </p></td>
+                <td><p> </p></td>
+          </tr>
+        
+
+        </table>
+        
+
+    </div>
+  </div>
+  
+ </body>
+</html>

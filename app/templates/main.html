@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8" />
+  <title>main</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+ </head>
+ <body>
+  <div class="bg-main">
+      <div class="header">
+              <div class="mihail">>Галлерея</div>
+          <nav>
+              <ul>
+                <li><a href="{{ url_for('collectionsPage') }}">Коллекции</a></li>
+                <li><a href="{{url_for('hallsPage')}}">Навигация</a></li>
+                  {% if user.is_authenticated %}
+                    <li><a href="{{ url_for('userInfo')}}">{{ user.fname}} {{ user.lname}}</a></li>
+                  {% else %}
+                    <li><a href="{{ url_for('loginUser')}}">Войти</a></li>
+                  {% endif %}
+
+                  
+              </ul>
+          </nav>
+  </div>
+    <div class="center">
+
+        <div class="center-header">
+          <h2 class="funny-title section-title">Галлерея</h2>
+        </div>
+        <div class="center-text">
+          <p>Галерея — музей, предоставляющий возможность быть ещё ближе к искусству.</p>
+          <p>Данный сайт сайт будет вашим проводником в путешествии по Галерее. Здесь вы сможете просмотреть коллеции, представленные в нашем музее, а также уузнать всю необходимую информацию о предметах выставки.</p>
+          <p>Добро пожаловать в Гелерею!</p>  
+        </div>
+        
+
+    </div>
+  </div>
+  
+ </body>
+</html>

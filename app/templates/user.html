@@ -3,47 +3,43 @@
  <head>
   <meta charset="utf-8" />
   <title>user</title>
-  <link rel="stylesheet" href="{{ url_for('static',filename='css/styles.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
  </head>
  <body>
   <div class="bg">
       <div class="header">
-              <div class="mihail"><a href="{{url_for('hollandStartPage')}}">Холланд</a></div>
+        <div class="mihail"><a href="{{url_for('main')}}">Галерея</a></div>
           <nav>
               <ul>
-                  <li><a href="{{ url_for('userPairs')}}">Пары</a></li>
-                  <li><a href="{{ url_for('hollandStartPage')}}">Пройти тест</a></li>
-                  <li><a href="{{ url_for('userResults')}}">Результаты теста</a></li>
+                <li><a href="{{ url_for('collectionsPage') }}">Коллекции</a></li>
+                <li><a href="{{url_for('hallsPage')}}">Навигация</a></li>
+                  <li><a href="{{ url_for('logoutUser')}}">Выйти</a></li>
+
               </ul>
           </nav>
   </div>
     <div class="center">
 
         <div class="center-text-user">
-          {% if user %}
-          <p>{{ user.first_name }}</p>
-          <p>{{user.last_name}}</p>
+    
+          <p>{{ user.fname }}</p>
+          <p>{{ user.lname}}</p>
           <p>{{ user.phone }}</p>
-          {% if user.email %}
-          <p>{{ user.email }}</p> 
-          {% endif %}
-          <p>{{ user.birthdate }}</p> 
-          {% if user.is_subscriber %}
-          <p>Подписка оформлена</p>
-          {% else %}
-          <p>Подписка отсутствует</p>
-          {% endif %}
-          {% if user.is_admin %}
-          <p>Вы являетесь модератором!</p>
-          {% endif %}
-          {% endif %}
 
+          <p>{{ user.phone  }}</p> 
+  
+          <p>Даты рождения нет в таблице ((</p> 
+           <p>{{ user.stuff }}</p>
+         
+      
         </div>
-        {% if not user.is_subscriber%}
+      
         <div class="center-button">
-          <a href="{{ url_for('subscribeUser') }}"><button>Оформить подписку</button></a>
+          <a href="writeoff.html"><button>Списание</button></a>
+           <a href="collectioncreate.html"><button>Новая коллекция</button></a>
+            <a href="books.html"><button>Инвентарные книги</button></a>
         </div>
-        {% endif %}
+
     </div>
   </div>
   

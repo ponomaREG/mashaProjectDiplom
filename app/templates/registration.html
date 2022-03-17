@@ -29,7 +29,7 @@ position: relative;
 z-index: 1;
 
 background: #FFFFFF;
-border-radius: 4px;
+border-radius: 10px;
 
 max-width: 360px;
 
@@ -45,7 +45,7 @@ box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 
 .form .back {
 
-color: #9370DB;
+color: #AA83B5;
 
 font-size: 13px;
 
@@ -55,7 +55,7 @@ text-align: start;
 
 .form .back a {
 
-color: #9370DB;
+color: #AA83B5;
 
 text-decoration: none;
 
@@ -71,7 +71,7 @@ background: #f2f2f2;
 
 width: 100%;
 
-border: 0;
+border: 4px;
 
 margin: 0 0 15px;
 
@@ -91,8 +91,8 @@ text-transform: uppercase;
 
 outline: 0;
 
-background: #9370DB;
-border-radius: 4px;
+background: #AA83B5;
+border-radius: 8px;
 
 width: 100%;
 
@@ -130,7 +130,7 @@ font-size: 12px;
 
 .form .message a {
 
-color: #9370DB;
+color: #AA83B5;
 
 text-decoration: none;
 
@@ -220,9 +220,7 @@ color: #EF3B3A;
 
 body {
 
-background: #9370DB; /* fallback for old browsers */
-
-background: linear-gradient(to left, #9370DB, #FF4500);
+background: #373441; /* fallback for old browsers */
 
 font-family: "Roboto", sans-serif;
 
@@ -251,16 +249,13 @@ font-family: "Roboto", sans-serif;
 <!-- 
 <input type="text" placeholder="Email" name="email" required/> -->
 
-<input type="text" placeholder="Phone" name="phone" required/>
+<input type="text" placeholder="Телефон" name="phone" required/>
 
 Дата рождения:<input type="date" name="birthDate" max="2002-12-31" min="1920-12-31"/>
 
 
 <button type="submit">Создать</button>
 
-{% if error %}
-    <p>{{ error }}</p>
-{% endif %}
 
 <p class="message">Уже зарегистрированы? <a href="{{ url_for('loginUser') }}">Войти</a></p>
 
