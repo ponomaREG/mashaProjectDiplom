@@ -3,21 +3,26 @@
  <head>
   <meta charset="utf-8" />
   <title>Заполнение карточки</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
  </head>
  <body>
   <div class="bg-tab">
-      <div class="header">
-              <div class="mihail"><a href="main.html">Галерея</a></div>
-          <nav>
-              <ul>
-                  <li><a href="collections.html">Коллекции</a></li>
-                  <li><a href="halls.html">Навигация</a></li>
-                  <li><a href="login.html">Войти</a></li>
-                  
-              </ul>
-          </nav>
-  </div>
+    <div class="header">
+      <div class="mihail"><a href="{{url_for('main')}}">Галерея</a></div>
+  <nav>
+      <ul>
+          <li><a href="{{ url_for('collectionsPage') }}">Коллекции</a></li>
+          <li><a href="{{url_for('hallsPage')}}">Навигация</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{{ url_for('userInfo')}}">{{ user.fname}} {{ user.lname}}</a></li>
+          {% else %}
+            <li><a href="{{ url_for('loginUser')}}">Войти</a></li>
+          {% endif %}
+
+          
+      </ul>
+  </nav>
+</div>
 <div class="center">
  <div class="left-header">
           <h2 class="left-title">Карточка предмета</h2>
@@ -27,70 +32,75 @@
           
           <tr> 
     <td class="leftcol">
-<p>
-  <input type="file" name="f">
-  <input type="submit" value="Подтвердить">
-</p>
 
     </td>
     <td class="leftcol-text">
 
 
-<div class="form">
+<form class="form" method="post" action="{{ url_for('itemFillPage') }}" enctype="multipart/form-data">
+  {% if error %}
+  <p>{{ error }}</p>
+  {% endif %}
+  <p>
+    Изображение
+    <input type="file" name="img" accept="image/png, image/jpeg, image/jpg" required>
+  </p>
 
 <p>Номер</p>
-<input type="" placeholder="Номер" name=""/>
+<input type="text" placeholder="Номер" name="number"required/>
 
 <p>Инвентарная книга</p>
-<p><select name="number">
-  <option value="1">Здесь нужно, чтоб были номера инвентарных книг из бд</option>
-  <option value="2">123</option>
-  <option value="3">456</option>
+<p><select name="book" required>
+  {% for b in books %}
+  <option value="{{b.idbook}}">{{ b.number }}</option>
+  {% endfor %}
 </select></p>
 
 <p>Дата регистрации</p>
-<input type="date" placeholder="Дата регистрации" name=""/>
+<input type="date" placeholder="Дата регистрации" name="registration"required/>
 
 <p>Название</p>
-<input type="" placeholder="Название" name=""/>
+<input type="text" placeholder="Название" name="name"required/>
 
 <p>Автор</p>
-<input type="" placeholder="Автор" name=""/>
+<input type="text" placeholder="Автор" name="author"required/>
 
 <p>Период создания</p>
-<input type="" placeholder="Период создания" name=""/>
+<input type="text" placeholder="Период создания" name="date" required/>
 
 <p>Место</p>
-<input type="" placeholder="Место" name=""/>
+<input type="text" placeholder="Место" name="place" required/>
 
 <p>Размеры</p>
-<input type="" placeholder="Размеры" name=""/>
+<input type="text" placeholder="Размеры" name="size" required/>
 
 <p>Количество</p>
-<input type="" placeholder="Количество" name=""/>
+<input type="number" placeholder="Количество" name="picies" required/>
 
 <p>Материал</p>
-<input type="" placeholder="Материал" name=""/>
+<input type="text" placeholder="Материал" name="material" required/>
 
 <p>Состояние</p>
-<input type="" placeholder="Состояние" name=""/>
+<input type="text" placeholder="Состояние" name="condition" required/>
 
 <p>Эпоха</p>
-<input type="" placeholder="Эпоха" name=""/>
+<input type="text" placeholder="Эпоха" name="era" required/>
 
 <p>Зал</p>
-<input type="" placeholder="Зал" name=""/>
+<input type="text" placeholder="Зал" name="hall" required/>
 
 <p>Тип</p>
-<input type="" placeholder="Тип" name=""/>
+<p><select name="type" required>
+  {% for t in types %}
+  <option value="{{t.idtype}}">{{ t.typename }}</option>
+  {% endfor %}
+</select></p>
 
 <p>Описание</p>
-<input type="" placeholder="Описание" name=""/>
+<input type="text" placeholder="Описание" name="description"/>
 
 <button type="submit">Сохранить</button>
-<p>  </p>
-<button type="submit">Составить акт</button>
-</div>
+</form>
   </td>
    </tr>
 

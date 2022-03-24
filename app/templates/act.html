@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        setTimeout(function(){
+            document.location = "{{ url_for('writeOffTabPage') }}";
+        }, 500)
+        function download(fileUrl, fileName) {
+            var a = document.createElement("a");
+            a.href = fileUrl;
+            a.setAttribute("download", fileName);
+            a.click();
+        }
+        
+        download("{{ fileUrl }}","{{ fileName }}")
+    </script>
+</head>
+<body>
+    <h1>Скачивание файла</h1>
+</body>
+</html>

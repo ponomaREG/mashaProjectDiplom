@@ -14,7 +14,6 @@
                 <li><a href="{{ url_for('collectionsPage') }}">Коллекции</a></li>
                 <li><a href="{{url_for('hallsPage')}}">Навигация</a></li>
                   <li><a href="{{ url_for('logoutUser')}}">Выйти</a></li>
-
               </ul>
           </nav>
   </div>
@@ -35,9 +34,9 @@
         </div>
       
         <div class="center-button">
-          <a href="writeoff.html"><button>Списание</button></a>
-           <a href="collectioncreate.html"><button>Новая коллекция</button></a>
-            <a href="books.html"><button>Инвентарные книги</button></a>
+          <a href="{{ url_for('writeOffPage') }}"><button>Списание</button></a>
+           <a href="{{ url_for('collectionCreatePage') }}"><button>Новая коллекция</button></a>
+            <a href="{{ url_for('booksPage') }}"><button>Инвентарные книги</button></a>
         </div>
 
     </div>

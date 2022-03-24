@@ -3,21 +3,26 @@
  <head>
   <meta charset="utf-8" />
   <title>Списание</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
  </head>
  <body>
   <div class="bg-tab">
-      <div class="header">
-              <div class="mihail"><a href="main.html">Галерея</a></div>
-          <nav>
-              <ul>
-                  <li><a href="collections.html">Коллекции</a></li>
-                  <li><a href="halls.html">Навигация</a></li>
-                  <li><a href="login.html">Войти</a></li>
-                  
-              </ul>
-          </nav>
-  </div>
+    <div class="header">
+      <div class="mihail"><a href="{{url_for('main')}}">Галерея</a></div>
+        <nav>
+            <ul>
+              <li><a href="{{ url_for('collectionsPage') }}">Коллекции</a></li>
+                <li><a href="halls.html">Навигация</a></li>
+                {% if user.is_authenticated %}
+                  <li><a href="{{ url_for('userInfo')}}">{{ user.fname}} {{ user.lname}}</a></li>
+                {% else %}
+                  <li><a href="{{ url_for('loginUser')}}">Войти</a></li>
+                {% endif %}
+
+                
+            </ul>
+        </nav>
+</div>
 <div class="center">
  <div class="left-header">
           <h2 class="left-title">Списание</h2>
@@ -30,25 +35,26 @@
     <td class="leftcol-text">
 
 
-<div class="form">
+<form class="form" action="{{ url_for('writeOffPage') }}" method="post">
 
 <p>Номер предмета</p>
-<input type="" placeholder="Номер" name=""/>
+<input type="number" placeholder="Номер" name="item"/>
 
 <p>Дата списания</p>
-<input type="date" placeholder="Дата регистрации" name=""/>
+<input type="date" placeholder="Дата регистрации" name="date"/>
 
 <p>Колличество предметов</p>
-<input type="text" placeholder="Колличество предметов" name=""/>
+<input type="number" placeholder="Колличество предметов" name="picies"/>
 
 <p>Причина</p>
-<input type="text" placeholder="Причина" name=""/>
+<input type="text" placeholder="Причина" name="reason"/>
 
+<input type="checkbox" id="isGenerateAct" name="isGenerateAct"/>
+<label for="isGenerateAct">Генерировать акт</label>
 
-<button type="submit">Списать</button>
 <p> </p>
-<button type="submit">Создать акт</button>
-</div>
+<button type="submit">Создать</button>
+</form>
   </td>
    </tr>
 

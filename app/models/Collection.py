@@ -1,9 +1,30 @@
 
 
 from app.models.SqlExecuter import SqlExecuter
+from app.models.Item import Item
 
 
 class Collection:
+
+    @staticmethod
+    def createCollection(
+        name,
+        description,
+        theme,
+        parametr
+    ):
+        print("INSERT INTO `museum`.`collection` (`collectionname`, `collectiondescription`) VALUES ('{}', '{}');".format(name, description))
+        collection = SqlExecuter.executeModif("INSERT INTO `museum`.`collection` (`collectionname`, `collectiondescription`) VALUES ('{}', '{}');".format(name, description))
+        if(theme == 1):
+            row = SqlExecuter.executeModif("UPDATE item SET collection = {} WHERE author = '{}';".format(collection, parametr))
+        elif(theme == 2):
+            era = Item.getEraByEraName(parametr)
+            row = SqlExecuter.executeModif("UPDATE item SET collection = {} WHERE era = {};".format(collection, era["id"]))
+        elif (theme == 3):
+            row = SqlExecuter.executeModif("UPDATE item SET collection = {} WHERE date = '{}';".format(collection, parametr))
+        else:
+            row = SqlExecuter.executeModif("UPDATE item SET collection = {} WHERE place = '{}';".format(collection, parametr))
+        return SqlExecuter.transformOneRow(row)
 
     @staticmethod
     def getAllCollections():

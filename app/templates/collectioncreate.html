@@ -3,21 +3,26 @@
  <head>
   <meta charset="utf-8" />
   <title>Создание коллекции</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
  </head>
  <body>
   <div class="bg-tab">
-      <div class="header">
-              <div class="mihail"><a href="main.html">Галерея</a></div>
-          <nav>
-              <ul>
-                  <li><a href="collections.html">Коллекции</a></li>
-                  <li><a href="halls.html">Навигация</a></li>
-                  <li><a href="login.html">Войти</a></li>
-                  
-              </ul>
-          </nav>
-  </div>
+    <div class="header">
+      <div class="mihail"><a href="{{url_for('main')}}">Галерея</a></div>
+  <nav>
+      <ul>
+          <li><a href="{{ url_for('collectionsPage') }}">Коллекции</a></li>
+          <li><a href="{{url_for('hallsPage')}}">Навигация</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{{ url_for('userInfo')}}">{{ user.fname}} {{ user.lname}}</a></li>
+          {% else %}
+            <li><a href="{{ url_for('loginUser')}}">Войти</a></li>
+          {% endif %}
+
+          
+      </ul>
+  </nav>
+</div>
 <div class="center">
  <div class="left-header">
           <h2 class="left-title">Создание коллекции</h2>
@@ -30,32 +35,32 @@
     <td class="leftcol-text">
 
 
-<div class="form">
+<form class="form" method="post" action="{{ url_for('collectionCreatePage') }}">
 
 <p>Тематика</p>
-<p><select name="number">
-  <option value="1">Автор</option>
+<p><select name="theme" id="themeSelector">
+  <option value="1" selected>Автор</option>
   <option value="2">Эпоха</option>
   <option value="3">Период</option>
   <option value="4">Место</option>
 </select></p>
 
 <p>Параметр</p>
-<p><select name="number">
-  <option value="1">Здесь нужно, чтоб были параметры из бд по каждому варианту</option>
-  <option value="2">Типа список из авторов из бд</option>
-  <option value="3">Или эпохи из бд</option>
+<p><select name="parametr" id="valueSelector">
+  {% for a in authors %}
+  <option value="{{a.author}}">{{a.author}}</option>
+  {% endfor %}
 </select></p>
 
 <p>Название коллекции</p>
-<input type="text" placeholder="Колличество предметов" name=""/>
+<input type="text" placeholder="Колличество предметов" name="collectionName"/>
 
 <p>Описание</p>
-<input type="text" placeholder="Описание" name=""/>
+<input type="text" placeholder="Описание" name="collectionDescription"/>
 
 
 <button type="submit">Создать коллекцию</button>
-</div>
+</form>
   </td>
    </tr>
 
@@ -65,4 +70,52 @@
   </div>
   
  </body>
+ <script type="text/javascript">
+  var authors = [];
+  {% for a in authors %}
+    authors.push("{{a.author}}");
+  {% endfor %}
+
+  var places = [];
+  {% for a in places %}
+    places.push("{{a.place}}");
+  {% endfor %}
+
+  var era = [];
+  {% for a in era %}
+    era.push("{{a.eraname}}");
+  {% endfor %}
+
+  var dates = [];
+  {% for a in dates %}
+    dates.push("{{a.date}}");
+  {% endfor %}
+
+  const themeObject = document.getElementById('themeSelector');
+  const valueObject = document.getElementById('valueSelector');
+  themeObject.addEventListener('change', (event) => {
+    while (valueObject.options.length > 0) {                
+          valueObject.remove(0);
+      }
+    let aR;
+    if (event.target.value == 1) {
+     aR = authors
+  }
+  if (event.target.value == 2) {
+     aR = places
+  }
+  if (event.target.value == 3) {
+     aR = era
+  }
+  if (event.target.value == 4) {
+     aR = dates
+  }
+    for (v of aR) {
+    var opt = document.createElement('option')
+    opt.value = v
+    opt.text = v
+    valueObject.add(opt, null)
+  }
+  });
+  </script>
 </html>

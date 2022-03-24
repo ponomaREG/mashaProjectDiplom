@@ -3,21 +3,26 @@
  <head>
   <meta charset="utf-8" />
   <title>Внесение книги</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
  </head>
  <body>
   <div class="bg-tab">
-      <div class="header">
-              <div class="mihail"><a href="main.html">Галерея</a></div>
-          <nav>
-              <ul>
-                  <li><a href="collections.html">Коллекции</a></li>
-                  <li><a href="halls.html">Навигация</a></li>
-                  <li><a href="login.html">Войти</a></li>
-                  
-              </ul>
-          </nav>
-  </div>
+    <div class="header">
+      <div class="mihail"><a href="{{url_for('main')}}">Галерея</a></div>
+  <nav>
+      <ul>
+          <li><a href="{{ url_for('collectionsPage') }}">Коллекции</a></li>
+          <li><a href="{{url_for('hallsPage')}}">Навигация</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{{ url_for('userInfo')}}">{{ user.fname}} {{ user.lname}}</a></li>
+          {% else %}
+            <li><a href="{{ url_for('loginUser')}}">Войти</a></li>
+          {% endif %}
+
+          
+      </ul>
+  </nav>
+</div>
 <div class="center">
  <div class="left-header">
           <h2 class="left-title">Инвентарная книга</h2>
@@ -30,27 +35,30 @@
     <td class="leftcol-text">
 
 
-<div class="form">
+<form class="form" method="post" action="{{ url_for('bookFillPage') }}">
 
 <p>Номер</p>
-<input type="" placeholder="Номер" name=""/>
+<input type="" placeholder="Номер" name="number"/>
 
 <p>Тип</p>
-<input type="text" placeholder="Тип инвентарной книги" name=""/>
+<input type="text" placeholder="Тип инвентарной книги" name="type"/>
 
 <p>Дата регистрации</p>
-<input type="date" placeholder="Дата регистрации" name=""/>
+<input type="date" placeholder="Дата регистрации" name="date"/>
 
 <p>Музей</p>
-<p><select name="number">
-  <option value="1">Здесь нужно, чтоб были названия музеев из бд</option>
-  <option value="2">Музей того, что сломал Аркадий Торохов</option>
-  <option value="3">Егор лох хехехех</option>
+<p><select name="museum">
+  {% for m in museums.values() %}
+  <option value="{{ m.idmuseum }}">{{ m.name }}</option>
+  {% endfor %}
 </select></p>
 
 
 <button type="submit">Сохранить</button>
-</div>
+{% if error %}
+<p>{{ error }}</p>
+{% endif %}
+</form>
   </td>
    </tr>
 

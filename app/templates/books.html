@@ -3,36 +3,45 @@
  <head>
   <meta charset="utf-8" />
   <title>Инвентарные книги</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
  </head>
  <body>
   <div class="bg-tab">
-      <div class="header">
-              <div class="mihail"><a href="main.html">Галерея</a></div>
-          <nav>
-              <ul>
-                  <li><a href="collections.html">Коллекции</a></li>
-                  <li><a href="halls.html">Навигация</a></li>
-                  <li><a href="halls.html">Войти</a></li>
-              </ul>
-          </nav>
-  </div>
+    <div class="header">
+      <div class="mihail"><a href="{{url_for('main')}}">Галерея</a></div>
+  <nav>
+      <ul>
+        <li><a href="{{url_for('collectionsPage')}}">Коллекции</a></li>
+          <li><a href="{{url_for('hallsPage')}}">Навигация</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{{ url_for('userInfo')}}">{{ user.fname}} {{ user.lname}}</a></li>
+          {% else %}
+            <li><a href="{{ url_for('loginUser')}}">Войти</a></li>
+          {% endif %}
+          
+      </ul>
+  </nav>
+</div>
     <div class="center">
+      {% if error %}
+      <p>{{ error }}</p>
+      {% else %}
         <div class="left-header">
           <h2 class="left-title">Инвентарные книги</h2>
         </div>
       <div class="center-tab">
         <table>
-          
+          {% for it in data %}
           <tr>
-            <td><a href="book.html">Номер инвентарной книги</a></td>
-            <td>Тип инвентарной книги</td>
-            <td>Дата</td>
-            <td>Музей</td>
+            <td><a href="{{ url_for('bookDetailPage', idBook=it.idbook) }}">{{ it.number }}</a></td>
+            <td>{{ it.type }}</td>
+            <td>{{ it.date}}</td>
+            <td>{{ museums[it.museum][name] }}</td>
           </tr>
-
+          {% endfor %}
         </table>
       </div>
+      {% endif %}
     </div>
   </div>
   

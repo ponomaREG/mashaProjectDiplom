@@ -40,7 +40,9 @@
       <p>Место: {{ item.place}} </p>
       <p>Эпоха: {{ era.eraname }}</p>
       <p>Материал: {{ item.material }}</p>
+      {% if item.collection %}
       <p>Коллекция:<a href="{{ url_for('collectionDetailPage', collectionId=item.collection)}}">{{ collection.collectionname}}</a></p>
+      {% endif %}
       <p>Зал:<a href="{{ url_for('hallPage', hallName = item.hall) }}">{{ item.hall }}</a></p>
       <p>Описание: {{item.description}}</p>
   </td>

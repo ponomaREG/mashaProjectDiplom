@@ -2,44 +2,41 @@
 <html>
  <head>
   <meta charset="utf-8" />
-  <title>Инвентарная книга</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>{{ book.number }}</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
  </head>
  <body>
   <div class="bg-tab">
       <div class="header">
-              <div class="mihail"><a href="main.html">Галерея</a></div>
-          <nav>
-              <ul>
-                  <li><a href="collections.html">Коллекции</a></li>
-                  <li><a href="halls.html">Навигация</a></li>
-                  <li><a href="login.html">Войти</a></li>
-              </ul>
-          </nav>
-  </div>
+      <div class="mihail"><a href="{{url_for('main')}}">Галерея</a></div>
+  <nav>
+      <ul>
+          <li><a href="{{ url_for('collectionsPage') }}">Коллекции</a></li>
+          <li><a href="{{url_for('hallsPage')}}">Навигация</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{{ url_for('userInfo')}}">{{ user.fname}} {{ user.lname}}</a></li>
+          {% else %}
+            <li><a href="{{ url_for('loginUser')}}">Войти</a></li>
+          {% endif %}
+
+          
+      </ul>
+  </nav>
+</div>
     <div class="center">
+        {% if error %}
+        <p>{{ error }}</p>
+        {% else %}
         <div class="left-header">
-          <h2 class="left-title">Инвентарная книга номер</h2>
+          <h2 class="left-title">{{ book.name }}</h2>
         </div>
         <div class="left-text">
-          <p>Тип:</p>
-          <p>Дата:</p>
-          <p>Музей:</p>
+          <p>Тип: {{ book.type }}</p>
+          <p>Дата: {{ book.date }}</p>
+          <p>Музей: {{ museum.name }}</p>
           
         </div>
-
-      <div class="center-tab">
-        <table>
-          
-          <tr>
-            <td><img src="css/pics/zh.jpg" alt=""></td>
-            <td>Год</td>
-            <td><a href="item.html">Название</a></td>
-            <td>Автор</td>
-          </tr>
-
-        </table>
-      </div>
+      {% endif %}
     </div>
   </div>
   

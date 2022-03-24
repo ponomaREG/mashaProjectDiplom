@@ -47,6 +47,37 @@ class SqlExecuter:
         except:
             return None
 
+    
+    @staticmethod
+    def transformOneRow(row):
+        result = {}
+        if (row is None):
+            result['message'] = 'Empty result'
+            result['status'] = 2
+            result['data'] = {}
+        else:
+            result['message'] = 'OK'
+            result['status'] = 0
+            result['data'] = row
+        return result
+
+    @staticmethod
+    def transformManyRow(rows):
+        result = {}
+        if (rows is None):
+            result['data'] = []
+            result['status'] = 2
+            result['message'] = "Unexpected error"
+        elif(len(rows) == 0):
+            result['data'] = []
+            result['status'] = 1
+            result['message'] = "Empty result"
+        else:
+            result['data'] = rows
+            result['status'] = 0
+            result['message'] = "OK"
+        return result
+
 
 
     @staticmethod
