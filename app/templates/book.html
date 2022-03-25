@@ -2,7 +2,7 @@
 <html>
  <head>
   <meta charset="utf-8" />
-  <title>{{ book.number }}</title>
+  <title>Номер: {{ book.number }}</title>
   <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
  </head>
  <body>
@@ -35,6 +35,18 @@
           <p>Дата: {{ book.date }}</p>
           <p>Музей: {{ museum.name }}</p>
           
+        </div>
+        <div class="center-tab">
+          <table>
+            {% for item in items %}
+            <tr>
+              <td><img src="{{ url_for('static', filename='pics/' + images[item.iditem]) }}" alt=""></td>
+              <td>{{ item.date }}</td>
+              <td><a href="{{ url_for('itemDetailPage', itemId=item.iditem)}}">{{ item.name }}</a></td>
+              <td>{{ item.author }}</td>
+            </tr>
+            {% endfor %}
+          </table>
         </div>
       {% endif %}
     </div>

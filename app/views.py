@@ -1,4 +1,3 @@
-import imp
 from xmlrpc.client import boolean
 from flask import jsonify, request, redirect, url_for, render_template, session, send_file
 from app import app
@@ -82,6 +81,7 @@ def collectionDetailPage(collectionId):
     return render_template('collection.html', user = flask_login.current_user, collection = collection['data'], dataitem = items['data'], images = items['images'])
 
 @app.route("/collection/create", methods = ["GET", "POST"])
+@flask_login.login_required
 def collectionCreatePage():
     if request.method == "POST":
         collectionName = Security.escape_sql(request.form.get("collectionName", type = str))
@@ -134,11 +134,14 @@ def itemStuffPage(itemId):
     if (item['status'] == 0):
         collection = Collection.getCollectionById(item['data']['collection'])
         era = Item.getEraByEraId(item['data']['era'])
-        return render_template("item.html", user = flask_login.current_user,item = item['data'], collection = collection['data'], era = era['data'], image = item['image'])
+        type = Item.getItemType(item["data"]["type"])
+        fund = Item.getFundByFundId(type["data"]["fund"])
+        return render_template("itemstuff.html", user = flask_login.current_user,item = item['data'], fund = fund["data"], collection = collection['data'], era = era['data'], image = item['image'], type = type["data"])
     else:
         return redirect(url_for("main"))
 
 @app.route("/item/fill", methods = ["GET", "POST"])
+@flask_login.login_required
 def itemFillPage():
     books = Book.getAllBooks()
     types = Item.getAllTypes()
@@ -222,10 +225,11 @@ def booksPage():
 def bookDetailPage(idBook):
     result = Book.getBookDetail(idBook)
     if(result['status'] == 0):
+        items = Item.getItemsByHall(idBook)
         museum = Museum.getMesuemById(result['data']['museum'])
-        return render_template('book.html', user = flask_login.current_user, book = result['data'], museum = museum["data"])
+        return render_template('book.html', user = flask_login.current_user, book = result['data'], museum = museum["data"], items = items["data"], images = items["images"])
     else:
-        return render_template('book.html', user = flask_login.current_user, error = result['message'], book = None)
+        return render_template('book.html', user = flask_login.current_user, error = result['message'], book = None, items = [], images = {})
 
 @app.route("/books/fill", methods = ["GET", "POST"])
 @flask_login.login_required
@@ -279,6 +283,7 @@ def writeOffTabPage():
         return render_template("writeofftab.html", user = flask_login.current_user, error = writeOffs["message"], writeoffs = [])
 
 @app.route("/act", methods = ["GET"])
+@flask_login.login_required
 def generateAct():
     museum = request.args.get("museum")
     date = request.args.get("date")

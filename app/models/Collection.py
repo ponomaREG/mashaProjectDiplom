@@ -13,13 +13,13 @@ class Collection:
         theme,
         parametr
     ):
-        print("INSERT INTO `museum`.`collection` (`collectionname`, `collectiondescription`) VALUES ('{}', '{}');".format(name, description))
         collection = SqlExecuter.executeModif("INSERT INTO `museum`.`collection` (`collectionname`, `collectiondescription`) VALUES ('{}', '{}');".format(name, description))
         if(theme == 1):
             row = SqlExecuter.executeModif("UPDATE item SET collection = {} WHERE author = '{}';".format(collection, parametr))
         elif(theme == 2):
             era = Item.getEraByEraName(parametr)
-            row = SqlExecuter.executeModif("UPDATE item SET collection = {} WHERE era = {};".format(collection, era["id"]))
+            print("UPDATE item SET collection = {} WHERE era = {};".format(collection, era["data"]))
+            row = SqlExecuter.executeModif("UPDATE item SET collection = {} WHERE era = {};".format(collection, era["data"]["idera"]))
         elif (theme == 3):
             row = SqlExecuter.executeModif("UPDATE item SET collection = {} WHERE date = '{}';".format(collection, parametr))
         else:

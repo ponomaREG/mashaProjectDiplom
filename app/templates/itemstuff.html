@@ -3,17 +3,21 @@
  <head>
   <meta charset="utf-8" />
   <title>Карточка</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
  </head>
  <body>
   <div class="bg-tab">
-      <div class="header">
-              <div class="mihail"><a href="main.html">Галерея</a></div>
+    <div class="header">
+              <div class="mihail"><a href="{{url_for('main')}}">Галерея</a></div>
           <nav>
               <ul>
-                  <li><a href="collections.html">Коллекции</a></li>
-                  <li><a href="halls.html">Навигация</a></li>
-                  <li><a href="login.html">Войти</a></li>
+                <li><a href="{{url_for('collectionsPage')}}">Коллекции</a></li>
+                  <li><a href="{{url_for('hallsPage')}}">Навигация</a></li>
+                  {% if user.is_authenticated %}
+                    <li><a href="{{ url_for('userInfo')}}">{{ user.fname}} {{ user.lname}}</a></li>
+                  {% else %}
+                    <li><a href="{{ url_for('loginUser')}}">Войти</a></li>
+                  {% endif %}
                   
               </ul>
           </nav>
@@ -24,27 +28,29 @@
         <table>
           
           <tr> 
-    <td class="leftcol"><img src="css/pics/demon.jpg" 
+    <td class="leftcol"><img src="{{ url_for('static', filename='pics/' + image)}}"
     class="leftcol" alt=""></td>
     <td class="leftcol-text">
-<p>Номер:</p>
-<p>Инвентарная книга:<a href="book.html"> номер ин книги</a></p>
-<p>Регистрация:</p>
-<p>Название:</p>
-<p>Автор:</p>
-<p>Период создания:</p>
-<p>Место:</p>
-<p>Эпоха:</p>
-<p>Размеры:</p>
-<p>Количество:</p>
-<p>Материал:</p>
-<p>Состояние:</p>
-<p>Коллекция:<a href="collection.html"> Название коллекции</a></p>
-<p>Зал:<a href="hall.html"> номер зала</a></p>
-<p>Тип:</p>
-<p>Фонд:</p>
-<p>Статус:</p>
-<p>Описание:</p>
+<p>Номер: {{ item.number }}</p>
+<p>Инвентарная книга:<a href="{{ url_for('bookDetailPage', idBook = item.book) }}">{{ item.book }}</a></p>
+<p>Регистрация: {{ item.registration }}</p>
+<p>Название: {{ item.name }}</p>
+<p>Автор: {{ item.author }}</p>
+<p>Период создания: {{ item.date }}</p>
+<p>Место: {{ item.place }}</p>
+<p>Эпоха: {{ era.eraname }}</p>
+<p>Размеры: {{ item.size }}</p>
+<p>Количество: {{ item.picies }}</p>
+<p>Материал: {{ item.material }}</p>
+<p>Состояние: {{ item.condition }}</p>
+{% if collection %}
+<p>Коллекция:<a href="{{ url_for('collectionDetailPage', collectionId=item.collection)}}">{{ collection.collectionname }}</a></p>
+{% endif %}
+<p>Зал:<a href="{{ url_for('hallPage', hallName = item.hall) }}">{{ item.hall }}</a></p>
+<p>Тип: {{ type.typename }}</p>
+<p>Фонд: {{ fund.fundname }}</p>
+<p>Статус: {{ item.status }}</p>
+<p>Описание: {{ item.description }}</p>
   </td>
    </tr>
 

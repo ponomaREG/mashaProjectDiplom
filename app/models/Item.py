@@ -33,6 +33,15 @@ class Item:
         row = SqlExecuter.executeModif("INSERT INTO `museum`.`item` ( `book`, `number`, `registration`, `author`, `place`, `era`, `date`, `size`, `pieces`, `material`, `description`, `collection`, `hall`, `type`, `img`, `name`, `condition`, `status`) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', NULL, '{}', '{}', '{}', '{}', '{}', '{}');".format(book, number, registration, author, place,eraId, date, size, picies, material, description, hall, type, imageId["data"], name,condition, "Есть"))
         return SqlExecuter.transformOneRow(row)
 
+    @staticmethod
+    def getItemsByBook(bookId):
+        rows = SqlExecuter.getAllRowsPacked("SELECT * FROM item WHERE book = {};".format(bookId))
+        images = {}
+        for it in rows['data']:
+            images[it['iditem']] = Item.__getImgPath(it['img'])
+        rows['images'] = images
+        return SqlExecuter.transformManyRow(rows)
+
 
     @staticmethod
     def getItemsByCollectionId(collectionId, isAll = True):
@@ -55,7 +64,7 @@ class Item:
             result['message'] = "OK"
             images = {}
             for it in result['data']:
-                images[it['iditem']] = Item.__getImgPath(it['iditem'])
+                images[it['iditem']] = Item.__getImgPath(it['img'])
             result['images'] = images
         return result
 
@@ -80,7 +89,7 @@ class Item:
             result['message'] = "OK"
             images = {}
             for it in result['data']:
-                images[it['iditem']] = Item.__getImgPath(it['iditem'])
+                images[it['iditem']] = Item.__getImgPath(it['img'])
             result['images'] = images
         return result
 
@@ -106,7 +115,7 @@ class Item:
             result['message'] = 'OK'
             result['status'] = 0
             result['data'] = row
-            result['image'] = Item.__getImgPath(itemId)
+            result['image'] = Item.__getImgPath(row["img"])
         return result
 
     @staticmethod
@@ -137,6 +146,10 @@ class Item:
         rows = SqlExecuter.getAllRowsPacked("SELECT * FROM type;")
         return SqlExecuter.transformManyRow(rows)
 
+    @staticmethod
+    def getFundByFundId(fundId):
+        row = SqlExecuter.getOneRowsPacked("SELECT * FROM fund WHERE idfund = {};".format(fundId))
+        return SqlExecuter.transformOneRow(row)
 
     @staticmethod
     def getEraByEraName(eraName):
