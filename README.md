@@ -1,11 +1,1 @@
-Course project of a store selling books.
-<br>
-Framework: Flask
-<br>
-Authentication and authorization: flask-login
-<br>
-Database:>SQLite
-<br>
-API methods are available for connecting a separate front-end server
-
-http://shop.endofthelist.codes/
+Маша, читай [это](https://github.com/ponomaREG/mashaProjectDiplom/blob/master/app/%D0%9A%D0%90%D0%A0%D0%A2%D0%90%20URL.txt) для того, чтобы понять какие url надо вводить 
